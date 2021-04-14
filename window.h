@@ -20,5 +20,7 @@ private:
     QFormLayout *formLayout;
 
     void createFormGroupBox();
+
+    void calculate();
 };
 #endif // WINDOW_H

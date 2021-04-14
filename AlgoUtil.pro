@@ -15,7 +15,17 @@ SOURCES += \
 HEADERS += \
     window.h
 
+release: DESTDIR = z:/temp/$${TARGET}/release
+debug:   DESTDIR = z:/temp/$${TARGET}/debug
+
+UI_DIR = $$DESTDIR/ui
+OBJECTS_DIR = $$DESTDIR/obj
+MOC_DIR = $$DESTDIR/obj
+RCC_DIR = $$DESTDIR/obj
+
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+CODECFORSRC = UTF-8
