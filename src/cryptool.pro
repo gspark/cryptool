@@ -10,10 +10,11 @@ CONFIG += c++11
 
 SOURCES += \
     main.cpp \
-    window.cpp
+    ui/window.cpp
 
 HEADERS += \
-    window.h
+    crypto/digest/md5.h \
+    ui/window.h
 
 release: DESTDIR = z:/temp/$${TARGET}/release
 debug:   DESTDIR = z:/temp/$${TARGET}/debug

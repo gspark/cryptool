@@ -7,7 +7,6 @@
 #include <QCheckBox>
 #include <QLineEdit>
 #include <QComboBox>
-#include <QSpinBox>
 
 window::window(QWidget *parent)
     : QWidget(parent)
