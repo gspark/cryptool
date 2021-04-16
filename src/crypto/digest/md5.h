@@ -14,7 +14,7 @@ private:
 
     std::string digestHex16(const char *data, size_t size);
 
-    std::string HexToString(const unsigned char *data, size_t size);
+    static std::string HexToString(const unsigned char *data, size_t size);
 };
 
 #endif // MD5_H

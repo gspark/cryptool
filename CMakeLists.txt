@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 # 工程名
 project(cryptool LANGUAGES CXX)
 
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
+#set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # 打开Qt的MOC、UI等功能
 set(CMAKE_AUTOMOC ON)
@@ -17,7 +17,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #SET(CMAKE_C_COMPILE_OBJECT z:/temp/${PROJECT_NAME}/obj)
 #SET(CMAKE_CXX_COMPILE_OBJECT z:/temp/${PROJECT_NAME}/obj)
 
-set(PREBUILTS_LIB_DERECTORY D:/ops/msys64/mingw64/lib)
+set(PREBUILT_LIB_DIRECTORY D:/ops/msys64/mingw64/lib)
 
 # Qt
 #set(USE_STATIC_QT_BY_DEFAULT ON)
@@ -26,11 +26,11 @@ set(REQUIRED_LIBS Core Gui Widgets)
 set(REQUIRED_LIBS_QUALIFIED Qt5::Core Qt5::Gui Qt5::Widgets)
 
 add_executable(cryptool
-        main.cpp
-        ui/window.h
-        ui/window.cpp
-        crypto/digest/md5.h
-        crypto/digest/md5.cpp
+        src/main.cpp
+        src/ui/window.h
+        src/ui/window.cpp
+        src/crypto/digest/md5.h
+        src/crypto/digest/md5.cpp
         )
 
 # 查找Qt库
@@ -50,8 +50,8 @@ if (ZLIB_FOUND)
     include_directories(${ZLIB_INCLUDE_DIRS})
 #    target_link_libraries(${PROJECT_NAME} ${ZLIB_LIBRARIES})
     # dll.a 有bug
-    target_link_libraries(${PROJECT_NAME} ${PREBUILTS_LIB_DERECTORY}/libz.a)
-    target_link_libraries(${PROJECT_NAME} ${PREBUILTS_LIB_DERECTORY}/libzstd.a)
+    target_link_libraries(${PROJECT_NAME} ${PREBUILT_LIB_DIRECTORY}/libz.a)
+    target_link_libraries(${PROJECT_NAME} ${PREBUILT_LIB_DIRECTORY}/libzstd.a)
 endif ()
 
 

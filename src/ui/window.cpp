@@ -7,6 +7,8 @@
 #include <QCheckBox>
 #include <QLineEdit>
 #include <QComboBox>
+#include <QLabel>
+#include <QComboBox>
 
 window::window(QWidget *parent)
     : QWidget(parent)
@@ -50,6 +52,8 @@ window::~window()
 void window::createFormGroupBox()
 {
     formLayout = new QFormLayout;
+    formLayout->addRow(new QLabel(tr("Data")), new QLabel(tr("Data:")));
+    formLayout->addRow(new QComboBox, new QLineEdit);
     formLayout->addRow(new QCheckBox(tr("MD5")), new QLineEdit);
     formLayout->addRow(new QCheckBox(tr("MD4")), new QLineEdit);
     formLayout->addRow(new QCheckBox(tr("SHA1")), new QLineEdit);
