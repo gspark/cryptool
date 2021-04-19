@@ -31,7 +31,7 @@ add_executable(cryptool
         src/ui/window.cpp
         src/crypto/digest/md5.h
         src/crypto/digest/md5.cpp
-        )
+        src/ui/inputdata.cpp src/ui/inputdata.h)
 
 # 查找Qt库
 find_package(Qt${QT_VERSION} COMPONENTS ${REQUIRED_LIBS} REQUIRED)

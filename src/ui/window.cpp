@@ -11,15 +11,14 @@
 #include <QComboBox>
 
 window::window(QWidget *parent)
-    : QWidget(parent)
-{
+        : QWidget(parent) {
     createFormGroupBox();
 
     buttonBox = new QDialogButtonBox(Qt::Horizontal);
     QPushButton *calcBtn = buttonBox->addButton(tr("&Calculate"), QDialogButtonBox::ActionRole);
     QPushButton *closeBtn = buttonBox->addButton(QDialogButtonBox::Close);
 
-    connect(calcBtn,&QPushButton::clicked,this,&window::calculate);
+    connect(calcBtn, &QPushButton::clicked, this, &window::calculate);
     connect(closeBtn, &QPushButton::clicked, this, &QWidget::close);
 
     QFrame *line = new QFrame();
@@ -27,14 +26,15 @@ window::window(QWidget *parent)
     line->setFrameShadow(QFrame::Sunken);
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
+    mainLayout->addWidget(new InputData);
     mainLayout->addLayout(formLayout);
+    mainLayout->addStretch();
     mainLayout->addWidget(line);
     mainLayout->addWidget(buttonBox);
     setLayout(mainLayout);
 }
 
-window::~window()
-{
+window::~window() {
 // 一种正确的写法 qt5
 #if 0
     QList<QWidget *> widgets = findChildren<QWidget *>("", Qt::FindDirectChildrenOnly);
@@ -52,8 +52,6 @@ window::~window()
 void window::createFormGroupBox()
 {
     formLayout = new QFormLayout;
-    formLayout->addRow(new QLabel(tr("Data")), new QLabel(tr("Data:")));
-    formLayout->addRow(new QComboBox, new QLineEdit);
     formLayout->addRow(new QCheckBox(tr("MD5")), new QLineEdit);
     formLayout->addRow(new QCheckBox(tr("MD4")), new QLineEdit);
     formLayout->addRow(new QCheckBox(tr("SHA1")), new QLineEdit);

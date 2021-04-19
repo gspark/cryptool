@@ -2,6 +2,7 @@
 #define WINDOW_H
 
 #include <QWidget>
+#include "inputdata.h"
 
 QT_BEGIN_NAMESPACE
 class QDialogButtonBox;
@@ -18,6 +19,7 @@ public:
 private:
     QDialogButtonBox *buttonBox;
     QFormLayout *formLayout;
+    InputData *selectFile;
 
     void createFormGroupBox();
 
