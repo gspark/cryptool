@@ -14,8 +14,8 @@ class window : public QWidget
     Q_OBJECT
 
 public:
-    window(QWidget *parent = nullptr);
-    ~window();
+    explicit window(QWidget *parent = nullptr);
+    ~window() override;
 private:
     QDialogButtonBox *buttonBox;
     QFormLayout *formLayout;

@@ -11,6 +11,7 @@ QT_BEGIN_NAMESPACE
 class QLineEdit;
 class QPushButton;
 class QComboBox;
+class QGridLayout;
 QT_END_NAMESPACE
 
 class InputData : public QWidget {
@@ -18,15 +19,24 @@ Q_OBJECT
 
 public:
     explicit InputData(QWidget *parent = nullptr);
-
     ~InputData() override;
+
+public:
+    std::string dataType[2] = { "File" , "Text string" };
 
 private slots:
     void browse();
+    void setDateType(int index);
 private:
+    QGridLayout *mainLayout;
+
     QLineEdit *fileName;
     QPushButton *browseButton;
-    QComboBox *dataType;
+    QComboBox *dataTypeCbBox;
+
+    QLineEdit *dataLineEdit;
+
+    void initDateType();
 };
 
 
