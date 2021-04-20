@@ -9,7 +9,7 @@ public:
 
     ~MD5();
 
-private:
+public:
     std::string digestHex16(const std::string &data);
 
     std::string digestHex16(const char *data, size_t size);

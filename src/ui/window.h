@@ -3,26 +3,22 @@
 
 #include <QWidget>
 #include "inputdata.h"
+#include "hashdata.h"
 
-QT_BEGIN_NAMESPACE
-class QDialogButtonBox;
-class QFormLayout;
-QT_END_NAMESPACE
 
-class window : public QWidget
-{
-    Q_OBJECT
+class window : public QWidget {
+Q_OBJECT
 
 public:
     explicit window(QWidget *parent = nullptr);
-    ~window() override;
-private:
-    QDialogButtonBox *buttonBox;
-    QFormLayout *formLayout;
-    InputData *selectFile;
 
-    void createFormGroupBox();
+    ~window() override;
+
+private:
+    InputData *inputData;
+    HashData *hashData;
 
     void calculate();
 };
+
 #endif // WINDOW_H

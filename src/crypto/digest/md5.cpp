@@ -9,7 +9,6 @@
 #include <openssl/md5.h>
 
 
-
 MD5::MD5() = default;
 
 MD5::~MD5() = default;
@@ -34,7 +33,7 @@ std::string MD5::digestHex16(const char *data, size_t size) {
     }
 
     unsigned char md[MD5_DIGEST_LENGTH];
-    ::MD5(reinterpret_cast<const unsigned char*>(data), size, reinterpret_cast<unsigned char *>(&md));
+    ::MD5(reinterpret_cast<const unsigned char *>(data), size, reinterpret_cast<unsigned char *>(&md));
 
     return HexToString(md, MD5_DIGEST_LENGTH);
 }

@@ -1,5 +1,7 @@
 #include "window.h"
 
+#include "../crypto/digest/md5.h"
+
 #include <QDialogButtonBox>
 #include <QPushButton>
 #include <QVBoxLayout>
@@ -11,22 +13,23 @@
 
 window::window(QWidget *parent)
         : QWidget(parent) {
-    createFormGroupBox();
 
-    buttonBox = new QDialogButtonBox(Qt::Horizontal);
+    auto *buttonBox = new QDialogButtonBox(Qt::Horizontal);
     QPushButton *calcBtn = buttonBox->addButton(tr("&Calculate"), QDialogButtonBox::ActionRole);
     QPushButton *closeBtn = buttonBox->addButton(QDialogButtonBox::Close);
 
     connect(calcBtn, &QPushButton::clicked, this, &window::calculate);
     connect(closeBtn, &QPushButton::clicked, this, &QWidget::close);
 
-    QFrame *line = new QFrame();
+    auto *line = new QFrame();
     line->setFrameShape(QFrame::HLine);
     line->setFrameShadow(QFrame::Sunken);
 
-    QVBoxLayout *mainLayout = new QVBoxLayout;
-    mainLayout->addWidget(new InputData);
-    mainLayout->addLayout(formLayout);
+    auto *mainLayout = new QVBoxLayout;
+    inputData = new InputData();
+    mainLayout->addWidget(inputData);
+    hashData = new HashData();
+    mainLayout->addWidget(hashData);
     mainLayout->addStretch();
     mainLayout->addWidget(line);
     mainLayout->addWidget(buttonBox);
@@ -43,20 +46,30 @@ window::~window() {
     }
 #endif
     setUpdatesEnabled(false);
-    qDeleteAll(findChildren<QWidget*>("", Qt::FindDirectChildrenOnly));
+    qDeleteAll(findChildren<QWidget *>("", Qt::FindDirectChildrenOnly));
 
     this->deleteLater();
 }
 
-void window::createFormGroupBox()
-{
-    formLayout = new QFormLayout;
-    formLayout->addRow(new QCheckBox(tr("MD5")), new QLineEdit);
-    formLayout->addRow(new QCheckBox(tr("MD4")), new QLineEdit);
-    formLayout->addRow(new QCheckBox(tr("SHA1")), new QLineEdit);
-}
+void window::calculate() {
+    std::vector<int> hashList = hashData->getHashList();
 
-void window::calculate()
-{
+    std::string data = inputData->getData();
+    if (data.empty()) {
+        return;
+    }
+
+    for (int i : hashList) {
+        switch (i) {
+            case static_cast<int>(HashEnum::MD5) :
+                MD5 *md5 = new MD5;
+                std::string md5str = md5->digestHex16(data);
+                hashData->setHashData(HashEnum::MD5, md5str);
+                delete md5;
+                break;
+
+        }
+    }
+
     return;
 }

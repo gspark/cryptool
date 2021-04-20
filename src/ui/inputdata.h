@@ -22,7 +22,8 @@ public:
     ~InputData() override;
 
 public:
-    std::string dataType[2] = { "File" , "Text string" };
+    const std::string dataType[2] = { "File" , "Text string" };
+    std::string getData();
 
 private slots:
     void browse();

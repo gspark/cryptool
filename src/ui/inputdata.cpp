@@ -19,6 +19,7 @@ InputData::InputData(QWidget *parent) :
 
     browseButton = new QPushButton(tr("..."), this);
     browseButton->setMaximumWidth(24);
+
     connect(browseButton, &QAbstractButton::clicked, this, &InputData::browse);
 
     initDateType();
@@ -41,7 +42,7 @@ InputData::~InputData() = default;
 void InputData::browse() {
     QString selectFile = QFileDialog::getOpenFileName(
             this,
-            tr("open a file."),
+            tr("select a file."),
             QDir::currentPath(),
             tr("All files(*.*)"));
     if (!selectFile.isEmpty()) {
@@ -83,4 +84,13 @@ void InputData::setDateType(int index) {
         mainLayout->addWidget(dataLineEdit, 1, 1,1,2);
         dataLineEdit->show();
     }
+}
+
+std::string InputData::getData() {
+    if (dataTypeCbBox->currentIndex() == 1) {
+        // 1 is text
+        return dataLineEdit->text().toStdString();
+    }
+
+    return std::string();
 }

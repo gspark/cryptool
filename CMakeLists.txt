@@ -25,13 +25,17 @@ set(QT_VERSION 5)
 set(REQUIRED_LIBS Core Gui Widgets)
 set(REQUIRED_LIBS_QUALIFIED Qt5::Core Qt5::Gui Qt5::Widgets)
 
-add_executable(cryptool
+add_executable(cryptool WIN32
         src/main.cpp
         src/ui/window.h
         src/ui/window.cpp
         src/crypto/digest/md5.h
         src/crypto/digest/md5.cpp
-        src/ui/inputdata.cpp src/ui/inputdata.h)
+        src/ui/inputdata.cpp
+        src/ui/inputdata.h
+        src/ui/hashdata.cpp
+        src/ui/hashdata.h
+        )
 
 # 查找Qt库
 find_package(Qt${QT_VERSION} COMPONENTS ${REQUIRED_LIBS} REQUIRED)
