@@ -5,8 +5,6 @@
 #include <QDialogButtonBox>
 #include <QPushButton>
 #include <QVBoxLayout>
-#include <QFormLayout>
-#include <QCheckBox>
 #include <QLineEdit>
 #include <QComboBox>
 

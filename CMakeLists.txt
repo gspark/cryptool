@@ -20,12 +20,15 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(PREBUILT_LIB_DIRECTORY D:/ops/msys64/mingw64/lib)
 
 # Qt
-#set(USE_STATIC_QT_BY_DEFAULT ON)
+include_directories(d:/osc/Qt/5.15.2/qtbase/src/*.c)
+include_directories(d:/osc/Qt/5.15.2/qtbase/src/*.cpp)
+
+
 set(QT_VERSION 5)
 set(REQUIRED_LIBS Core Gui Widgets)
 set(REQUIRED_LIBS_QUALIFIED Qt5::Core Qt5::Gui Qt5::Widgets)
 
-add_executable(cryptool WIN32
+add_executable(${PROJECT_NAME} WIN32
         src/main.cpp
         src/ui/window.h
         src/ui/window.cpp
@@ -35,7 +38,8 @@ add_executable(cryptool WIN32
         src/ui/inputdata.h
         src/ui/hashdata.cpp
         src/ui/hashdata.h
-        )
+        src/config.cpp
+        src/config.h)
 
 # 查找Qt库
 find_package(Qt${QT_VERSION} COMPONENTS ${REQUIRED_LIBS} REQUIRED)
