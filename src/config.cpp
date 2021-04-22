@@ -20,6 +20,11 @@ ConfigIni::~ConfigIni() {
 }
 
 ConfigIni &ConfigIni::getInstance() {
+//    1. 变量在代码第一次执行到变量声明的地方时初始化。
+//    2. 初始化过程中发生异常的话视为未完成初始化，未完成初始化的话，需要下次有代码执行到相同位置时再次初始化。
+//    3. 在当前线程执行到需要初始化变量的地方时，如果有其他线程正在初始化该变量，则阻塞当前线程，直到初始化完成为止。
+//    4. 如果初始化过程中发生了对初始化的递归调用，则视为未定义行为。
+
     static ConfigIni instance;
     return instance;
 }
@@ -30,7 +35,7 @@ void ConfigIni::setPathFile(const QString &path_file) {
         // 及时同步之前的
         settings->sync();
         // 改变路径
-        settings->setPath(settings->format(), settings->scope(), path_file);
+        QSettings::setPath(settings->format(), settings->scope(), path_file);
         settings->setIniCodec("UTF-8");
     }
 }
@@ -44,9 +49,11 @@ bool ConfigIni::iniContains(const QString &key) {
 }
 
 QVariant ConfigIni::iniRead(const QString &key, const QVariant &defaultValue) {
-    if (!settings->contains(key)) { // 不存在
-        settings->setValue(key, defaultValue);  // 使用默认值创建
-        return defaultValue;    // 返回默认值
+    if (!settings->contains(key)) {
+        // 不存在
+        // 使用默认值创建
+        settings->setValue(key, defaultValue);
+        return defaultValue;
     }
     return settings->value(key);
 }

@@ -4,6 +4,7 @@
 
 
 #include "inputdata.h"
+#include "..\config.h"
 
 #include <QPushButton>
 #include <QLineEdit>
@@ -12,6 +13,9 @@
 #include <QFileDialog>
 #include <QLabel>
 #include <QComboBox>
+#include <sstream>
+#include <fstream>
+
 
 InputData::InputData(QWidget *parent) :
         QWidget(parent) {
@@ -33,7 +37,8 @@ InputData::InputData(QWidget *parent) :
 
     dataLineEdit = new QLineEdit;
 
-    setDateType(0);
+    int dateType = ConfigIni::getInstance().iniRead(QStringLiteral("Hash/dataType"), 0).toInt();
+    setDateType(dateType);
 }
 
 InputData::~InputData() = default;
@@ -53,7 +58,7 @@ void InputData::browse() {
 void InputData::initDateType() {
     dataTypeCbBox = new QComboBox(this);
 
-    for (const auto &s : this->dataType) {
+    for (auto &s : this->dataType) {
         dataTypeCbBox->addItem(QString::fromStdString(s));
     }
 
@@ -74,23 +79,26 @@ void InputData::setDateType(int index) {
             fileName->show();
             browseButton->show();
         }
-    } else if( index == 1) {
+    } else if (index == 1) {
         mainLayout->removeWidget(fileName);
         mainLayout->removeWidget(browseButton);
         if (fileName->isVisible()) {
             fileName->hide();
             browseButton->hide();
         }
-        mainLayout->addWidget(dataLineEdit, 1, 1,1,2);
+        mainLayout->addWidget(dataLineEdit, 1, 1, 1, 2);
         dataLineEdit->show();
     }
 }
 
-std::string InputData::getData() {
-    if (dataTypeCbBox->currentIndex() == 1) {
+std::istream *InputData::getData() {
+    std::istream *ret = nullptr;
+    if (dataTypeCbBox->currentIndex() == 0) {
+        // 0 is file
+        ret = new std::ifstream(fileName->text().toStdString(), std::ios_base::in | std::ios_base::binary);
+    } else if (dataTypeCbBox->currentIndex() == 1) {
         // 1 is text
-        return dataLineEdit->text().toStdString();
+        ret = new std::istringstream(dataLineEdit->text().toStdString());
     }
-
-    return std::string();
+    return ret;
 }

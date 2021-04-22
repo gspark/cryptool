@@ -7,6 +7,7 @@
 #include <sstream>
 
 #include <openssl/md5.h>
+#include <openssl/evp.h>
 
 
 MD5::MD5() = default;
@@ -36,4 +37,34 @@ std::string MD5::digestHex16(const char *data, size_t size) {
     ::MD5(reinterpret_cast<const unsigned char *>(data), size, reinterpret_cast<unsigned char *>(&md));
 
     return HexToString(md, MD5_DIGEST_LENGTH);
+}
+
+std::string MD5::digestHex16(std::istream &stream) {
+    auto ctx = EVP_MD_CTX_create();
+    unsigned char md_value[EVP_MAX_MD_SIZE];
+    unsigned int md_len = 0;
+
+    EVP_MD_CTX_init(ctx);
+#ifndef OPENSSL_IS_BORINGSSL
+    EVP_MD_CTX_set_flags(ctx, EVP_MD_CTX_FLAG_NON_FIPS_ALLOW);
+#endif
+    EVP_DigestInit_ex(ctx, EVP_md5(), nullptr);
+
+    stream.seekg(0, std::istream::beg);
+    char streamBuffer[2048];
+    while (stream.good()) {
+        stream.read(streamBuffer, 2048);
+        auto bytesRead = stream.gcount();
+
+        if (bytesRead > 0) {
+            EVP_DigestUpdate(ctx, streamBuffer, bytesRead);
+        }
+    }
+
+    EVP_DigestFinal_ex(ctx, md_value, &md_len);
+    EVP_MD_CTX_destroy(ctx);
+
+    std::string strMD5 = HexToString(md_value, md_len);
+
+    return strMD5;
 }

@@ -7,6 +7,8 @@
 #include <QVBoxLayout>
 #include <QLineEdit>
 #include <QComboBox>
+#include <sstream>
+#include <fstream>
 
 
 window::window(QWidget *parent)
@@ -52,22 +54,45 @@ window::~window() {
 void window::calculate() {
     std::vector<int> hashList = hashData->getHashList();
 
-    std::string data = inputData->getData();
-    if (data.empty()) {
+    std::istream *data_ptr = inputData->getData();
+    if (nullptr == data_ptr) {
         return;
     }
 
+    auto *ss = dynamic_cast<std::istringstream *>(data_ptr);
+    if (nullptr != ss) {
+        std::string data = ss->str();
+        for (int i : hashList) {
+            switch (i) {
+                case static_cast<int>(HashEnum::MD5) : {
+                    MD5 *md5 = new MD5;
+                    std::string md5str = md5->digestHex16(data);
+                    hashData->setHashData(HashEnum::MD5, md5str);
+                    delete md5;
+                }
+                    break;
+                case static_cast<int>(HashEnum::MD4) :
+                    break;
+            }
+        }
+        return;;
+    }
+
+    auto *ifs = dynamic_cast<std::ifstream *>(data_ptr);
     for (int i : hashList) {
         switch (i) {
-            case static_cast<int>(HashEnum::MD5) :
+            case static_cast<int>(HashEnum::MD5) : {
                 MD5 *md5 = new MD5;
-                std::string md5str = md5->digestHex16(data);
+                std::string md5str = md5->digestHex16(*ifs);
                 hashData->setHashData(HashEnum::MD5, md5str);
                 delete md5;
+            }
+                break;
+            case static_cast<int>(HashEnum::MD4) :
+
                 break;
 
         }
     }
-
-    return;
+    delete data_ptr;
 }

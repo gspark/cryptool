@@ -6,12 +6,17 @@
 #define CRYPTOOL_INPUTDATA_H
 
 #include <QWidget>
+#include <istream>
 
 QT_BEGIN_NAMESPACE
 class QLineEdit;
+
 class QPushButton;
+
 class QComboBox;
+
 class QGridLayout;
+
 QT_END_NAMESPACE
 
 class InputData : public QWidget {
@@ -19,15 +24,20 @@ Q_OBJECT
 
 public:
     explicit InputData(QWidget *parent = nullptr);
+
     ~InputData() override;
 
 public:
-    const std::string dataType[2] = { "File" , "Text string" };
-    std::string getData();
+    const std::string dataType[2] = {"File", "Text string"};
+
+    std::istream *getData();
 
 private slots:
+
     void browse();
+
     void setDateType(int index);
+
 private:
     QGridLayout *mainLayout;
 
