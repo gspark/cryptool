@@ -9,6 +9,7 @@
 #include <QComboBox>
 #include <sstream>
 #include <fstream>
+#include <thread>
 
 
 window::window(QWidget *parent)
@@ -59,40 +60,84 @@ void window::calculate() {
         return;
     }
 
-    auto *ss = dynamic_cast<std::istringstream *>(data_ptr);
-    if (nullptr != ss) {
-        std::string data = ss->str();
-        for (int i : hashList) {
-            switch (i) {
-                case static_cast<int>(HashEnum::MD5) : {
-                    MD5 *md5 = new MD5;
-                    std::string md5str = md5->digestHex16(data);
-                    hashData->setHashData(HashEnum::MD5, md5str);
-                    delete md5;
-                }
-                    break;
-                case static_cast<int>(HashEnum::MD4) :
-                    break;
-            }
-        }
-        return;;
+    auto *iss = dynamic_cast<std::istringstream *>(data_ptr);
+    if (nullptr != iss) {
+        calculate1(hashList, iss);
+        return;
     }
 
     auto *ifs = dynamic_cast<std::ifstream *>(data_ptr);
-    for (int i : hashList) {
-        switch (i) {
-            case static_cast<int>(HashEnum::MD5) : {
-                MD5 *md5 = new MD5;
-                std::string md5str = md5->digestHex16(*ifs);
-                hashData->setHashData(HashEnum::MD5, md5str);
-                delete md5;
-            }
-                break;
-            case static_cast<int>(HashEnum::MD4) :
-
-                break;
-
-        }
+    if (nullptr != ifs) {
+        calculate2(hashList, ifs);
     }
+
     delete data_ptr;
+}
+
+void window::calculate1(std::vector<int> &hashList, const std::istringstream *iss) {
+    std::vector<std::thread *> ths;
+    for (int i : hashList) {
+        auto *thr = new std::thread(&window::doCalc1, this, iss, i);
+        ths.push_back(thr);
+    }
+
+    for (std::thread *thr: ths) {
+        thr->join();
+    }
+}
+
+void window::doCalc1(const std::istringstream *iss, int i) {
+    switch (i) {
+        case static_cast<int>(HashEnum::MD5) : {
+            MD5 *md5 = new MD5;
+            std::string md5str = md5->digestHex16(iss->str());
+            hashData->setHashData(HashEnum::MD5, md5str);
+            delete md5;
+        }
+            break;
+        case static_cast<int>(HashEnum::MD4) :
+            break;
+        case static_cast<int>(HashEnum::SHA1):
+            break;
+        case static_cast<int>(HashEnum::SHA256):
+            break;
+        case static_cast<int>(HashEnum::SHA384):
+            break;
+        case static_cast<int>(HashEnum::SHA512):
+            break;
+    }
+}
+
+void window::calculate2(std::vector<int> &hashList, const std::ifstream *ifs) {
+    std::vector<std::thread *> ths;
+    for (int i : hashList) {
+        auto *thr = new std::thread(&window::doCalc2, this, ifs, i);
+        ths.push_back(thr);
+    }
+
+    for (std::thread *thr: ths) {
+        thr->join();
+    }
+}
+
+void window::doCalc2(const std::ifstream *ifs, int i) {
+    switch (i) {
+        case static_cast<int>(HashEnum::MD5) : {
+            MD5 *md5 = new MD5;
+            std::string md5str = md5->digestHex16((std::istream &) *ifs);
+            hashData->setHashData(HashEnum::MD5, md5str);
+            delete md5;
+        }
+            break;
+        case static_cast<int>(HashEnum::MD4) :
+            break;
+        case static_cast<int>(HashEnum::SHA1):
+            break;
+        case static_cast<int>(HashEnum::SHA256):
+            break;
+        case static_cast<int>(HashEnum::SHA384):
+            break;
+        case static_cast<int>(HashEnum::SHA512):
+            break;
+    }
 }
