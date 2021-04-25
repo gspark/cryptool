@@ -60,30 +60,31 @@ void window::calculate() {
         return;
     }
 
+    std::vector<std::thread *> ths;
+
     auto *iss = dynamic_cast<std::istringstream *>(data_ptr);
     if (nullptr != iss) {
-        calculate1(hashList, iss);
+        for (int i : hashList) {
+            auto *thr = new std::thread(&window::doCalc1, this, iss, i);
+            ths.push_back(thr);
+        }
         return;
     }
 
     auto *ifs = dynamic_cast<std::ifstream *>(data_ptr);
     if (nullptr != ifs) {
-        calculate2(hashList, ifs);
-    }
-
-    delete data_ptr;
-}
-
-void window::calculate1(std::vector<int> &hashList, const std::istringstream *iss) {
-    std::vector<std::thread *> ths;
-    for (int i : hashList) {
-        auto *thr = new std::thread(&window::doCalc1, this, iss, i);
-        ths.push_back(thr);
+        for (int i : hashList) {
+            auto *thr = new std::thread(&window::doCalc2, this, ifs, i);
+            ths.push_back(thr);
+        }
     }
 
     for (std::thread *thr: ths) {
         thr->join();
+        delete thr;
     }
+
+    delete data_ptr;
 }
 
 void window::doCalc1(const std::istringstream *iss, int i) {
@@ -105,18 +106,6 @@ void window::doCalc1(const std::istringstream *iss, int i) {
             break;
         case static_cast<int>(HashEnum::SHA512):
             break;
-    }
-}
-
-void window::calculate2(std::vector<int> &hashList, const std::ifstream *ifs) {
-    std::vector<std::thread *> ths;
-    for (int i : hashList) {
-        auto *thr = new std::thread(&window::doCalc2, this, ifs, i);
-        ths.push_back(thr);
-    }
-
-    for (std::thread *thr: ths) {
-        thr->join();
     }
 }
 

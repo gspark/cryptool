@@ -20,10 +20,6 @@ private:
 
     void calculate();
 
-    void calculate1(std::vector<int> &hashList, const std::istringstream *iss);
-
-    void calculate2(std::vector<int> &hashList, const std::ifstream *ifs);
-
     void doCalc1(const std::istringstream *iss, int i);
 
     void doCalc2(const std::ifstream *ifs, int i);
