@@ -1,6 +1,7 @@
 #include "window.h"
 
-#include "../crypto/digest/md5.h"
+#include "../crypto/digest/md4_5.h"
+#include "../crypto/digest/sha.h"
 
 #include <QDialogButtonBox>
 #include <QPushButton>
@@ -61,6 +62,7 @@ void window::calculate() {
     }
 
     std::vector<std::thread *> ths;
+    std::vector<std::ifstream *> ifstreams;
 
     auto *iss = dynamic_cast<std::istringstream *>(data_ptr);
     if (nullptr != iss) {
@@ -68,14 +70,18 @@ void window::calculate() {
             auto *thr = new std::thread(&window::doCalc1, this, iss, i);
             ths.push_back(thr);
         }
-        return;
-    }
+    } else {
+        auto *ifs = dynamic_cast<std::ifstream *>(data_ptr);
+        if (nullptr != ifs) {
+            for (int i : hashList) {
+                auto *thr = new std::thread(&window::doCalc2, this, ifs, i);
+                ths.push_back(thr);
 
-    auto *ifs = dynamic_cast<std::ifstream *>(data_ptr);
-    if (nullptr != ifs) {
-        for (int i : hashList) {
-            auto *thr = new std::thread(&window::doCalc2, this, ifs, i);
-            ths.push_back(thr);
+                // ifstream 线程不安全
+                ifstreams.push_back(ifs);
+                data_ptr = inputData->getData();
+                ifs = dynamic_cast<std::ifstream *>(data_ptr);
+            }
         }
     }
 
@@ -85,20 +91,28 @@ void window::calculate() {
     }
 
     delete data_ptr;
+
+    for (std::ifstream *ifs: ifstreams) {
+        delete ifs;
+    }
 }
 
 void window::doCalc1(const std::istringstream *iss, int i) {
     switch (i) {
         case static_cast<int>(HashEnum::MD5) : {
-            MD5 *md5 = new MD5;
-            std::string md5str = md5->digestHex16(iss->str());
+            std::string md5str = MD4_5::md5_digestHex16(iss->str());
             hashData->setHashData(HashEnum::MD5, md5str);
-            delete md5;
         }
             break;
-        case static_cast<int>(HashEnum::MD4) :
+        case static_cast<int>(HashEnum::MD4) : {
+            std::string md4str = MD4_5::md4_digestHex16(iss->str());
+            hashData->setHashData(HashEnum::MD4, md4str);
+        }
             break;
-        case static_cast<int>(HashEnum::SHA1):
+        case static_cast<int>(HashEnum::SHA1): {
+            std::string sha1str = sha::sha1_digestHex16(iss->str());
+            hashData->setHashData(HashEnum::SHA1, sha1str);
+        }
             break;
         case static_cast<int>(HashEnum::SHA256):
             break;
@@ -112,15 +126,19 @@ void window::doCalc1(const std::istringstream *iss, int i) {
 void window::doCalc2(const std::ifstream *ifs, int i) {
     switch (i) {
         case static_cast<int>(HashEnum::MD5) : {
-            MD5 *md5 = new MD5;
-            std::string md5str = md5->digestHex16((std::istream &) *ifs);
+            std::string md5str = MD4_5::md5_digestHex16((std::istream &) *ifs);
             hashData->setHashData(HashEnum::MD5, md5str);
-            delete md5;
         }
             break;
-        case static_cast<int>(HashEnum::MD4) :
+        case static_cast<int>(HashEnum::MD4) : {
+            std::string md4str = MD4_5::md4_digestHex16((std::istream &) *ifs);
+            hashData->setHashData(HashEnum::MD4, md4str);
+        }
             break;
-        case static_cast<int>(HashEnum::SHA1):
+        case static_cast<int>(HashEnum::SHA1): {
+            std::string sha1str = sha::sha1_digestHex16((std::istream &) *ifs);
+            hashData->setHashData(HashEnum::SHA1, sha1str);
+        }
             break;
         case static_cast<int>(HashEnum::SHA256):
             break;

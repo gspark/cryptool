@@ -32,14 +32,14 @@ add_executable(${PROJECT_NAME} WIN32
         src/main.cpp
         src/ui/window.h
         src/ui/window.cpp
-        src/crypto/digest/md5.h
-        src/crypto/digest/md5.cpp
+        src/crypto/digest/md4_5.h
+        src/crypto/digest/md4_5.cpp
         src/ui/inputdata.cpp
         src/ui/inputdata.h
         src/ui/hashdata.cpp
         src/ui/hashdata.h
         src/config.cpp
-        src/config.h)
+        src/config.h src/crypto/digest/str.cpp src/crypto/digest/str.h src/crypto/digest/sha.cpp src/crypto/digest/sha.h)
 
 # 查找Qt库
 find_package(Qt${QT_VERSION} COMPONENTS ${REQUIRED_LIBS} REQUIRED)
