@@ -4,7 +4,7 @@
 
 
 #include "inputdata.h"
-#include "..\config.h"
+#include "../config.h"
 
 #include <QPushButton>
 #include <QLineEdit>
@@ -15,6 +15,7 @@
 #include <QComboBox>
 #include <sstream>
 #include <fstream>
+#include <tchar.h>
 
 
 InputData::InputData(QWidget *parent) :
@@ -64,7 +65,6 @@ void InputData::initDateType() {
 
     connect(dataTypeCbBox, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &InputData::setDateType);
-
 }
 
 void InputData::setDateType(int index) {
@@ -95,7 +95,8 @@ std::istream *InputData::getData() {
     std::istream *ret = nullptr;
     if (dataTypeCbBox->currentIndex() == 0) {
         // 0 is file
-        ret = new std::ifstream(fileName->text().toStdString(), std::ios_base::in | std::ios_base::binary);
+        // ifstream 的中文处理， string有问题
+        ret = new std::ifstream(fileName->text().toStdWString().c_str(), std::ios_base::in | std::ios_base::binary);
     } else if (dataTypeCbBox->currentIndex() == 1) {
         // 1 is text
         ret = new std::istringstream(dataLineEdit->text().toStdString());

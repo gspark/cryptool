@@ -1,5 +1,6 @@
 #include "window.h"
 
+#include "../config.h"
 #include "../crypto/digest/md4_5.h"
 #include "../crypto/digest/sha.h"
 
@@ -8,6 +9,8 @@
 #include <QVBoxLayout>
 #include <QLineEdit>
 #include <QComboBox>
+#include <QCursor>
+
 #include <sstream>
 #include <fstream>
 #include <thread>
@@ -36,6 +39,8 @@ window::window(QWidget *parent)
     mainLayout->addWidget(line);
     mainLayout->addWidget(buttonBox);
     setLayout(mainLayout);
+
+    this->resize(ConfigIni::getInstance().iniRead(QStringLiteral("window/size"), this->sizeHint()).toSize());
 }
 
 window::~window() {
@@ -48,14 +53,20 @@ window::~window() {
     }
 #endif
     setUpdatesEnabled(false);
+
+    ConfigIni::getInstance().iniWrite(QStringLiteral("window/size"), this->size());
+
     qDeleteAll(findChildren<QWidget *>("", Qt::FindDirectChildrenOnly));
 
     this->deleteLater();
 }
 
 void window::calculate() {
-    std::vector<int> hashList = hashData->getHashList();
+    QCursor currCursor = this->cursor();
+    this->setCursor(Qt::BusyCursor);
+    this->setEnabled(false);
 
+    std::vector<int> hashList = hashData->getHashList();
     std::istream *data_ptr = inputData->getData();
     if (nullptr == data_ptr) {
         return;
@@ -98,6 +109,9 @@ void window::calculate() {
     for (std::ifstream *ifs: ifstreams) {
         delete ifs;
     }
+
+    this->setCursor(currCursor);
+    this->setEnabled(true);
 }
 
 void window::doCalc1(const std::istringstream *iss, int iEnum) {
