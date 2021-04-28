@@ -73,14 +73,17 @@ void window::calculate() {
     } else {
         auto *ifs = dynamic_cast<std::ifstream *>(data_ptr);
         if (nullptr != ifs) {
-            for (int i : hashList) {
-                auto *thr = new std::thread(&window::doCalc2, this, ifs, i);
+            size_t len = hashList.size();
+            for (size_t i = 0; i < len; ++i) {
+                auto *thr = new std::thread(&window::doCalc2, this, ifs, hashList[i]);
                 ths.push_back(thr);
 
                 // ifstream 线程不安全
-                ifstreams.push_back(ifs);
-                data_ptr = inputData->getData();
-                ifs = dynamic_cast<std::ifstream *>(data_ptr);
+                if (i < len - 1) {
+                    ifstreams.push_back(ifs);
+                    data_ptr = inputData->getData();
+                    ifs = dynamic_cast<std::ifstream *>(data_ptr);
+                }
             }
         }
     }

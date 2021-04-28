@@ -20,9 +20,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(PREBUILT_LIB_DIRECTORY D:/ops/msys64/mingw64/lib)
 
 # Qt
-include_directories(d:/osc/Qt/5.15.2/qtbase/src/*.c)
-include_directories(d:/osc/Qt/5.15.2/qtbase/src/*.cpp)
-
+#include_directories(d:/osc/Qt/5.15.2/qtbase/src/*.c)
+#include_directories(d:/osc/Qt/5.15.2/qtbase/src/*.cpp)
 
 set(QT_VERSION 5)
 set(REQUIRED_LIBS Core Gui Widgets)
