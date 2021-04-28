@@ -100,8 +100,8 @@ void window::calculate() {
     }
 }
 
-void window::doCalc1(const std::istringstream *iss, int i) {
-    switch (i) {
+void window::doCalc1(const std::istringstream *iss, int iEnum) {
+    switch (iEnum) {
         case static_cast<int>(HashEnum::MD5) : {
             std::string md5str = MD4_5::md5_digestHex16(iss->str());
             hashData->setHashData(HashEnum::MD5, md5str);
@@ -113,21 +113,32 @@ void window::doCalc1(const std::istringstream *iss, int i) {
         }
             break;
         case static_cast<int>(HashEnum::SHA1): {
-            std::string sha1str = sha::sha1_digestHex16(iss->str());
-            hashData->setHashData(HashEnum::SHA1, sha1str);
+            std::string sha = sha::sha1_digestHex16(iss->str());
+            hashData->setHashData(HashEnum::SHA1, sha);
         }
             break;
-        case static_cast<int>(HashEnum::SHA256):
+        case static_cast<int>(HashEnum::SHA256): {
+            std::string sha = sha::sha256_digestHex16(iss->str());
+            hashData->setHashData(HashEnum::SHA256, sha);
+        }
             break;
-        case static_cast<int>(HashEnum::SHA384):
+        case static_cast<int>(HashEnum::SHA384): {
+            std::string sha = sha::sha384_digestHex16(iss->str());
+            hashData->setHashData(HashEnum::SHA384, sha);
+        }
             break;
-        case static_cast<int>(HashEnum::SHA512):
+        case static_cast<int>(HashEnum::SHA512): {
+            std::string sha = sha::sha512_digestHex16(iss->str());
+            hashData->setHashData(HashEnum::SHA512, sha);
+        }
+            break;
+        default:
             break;
     }
 }
 
-void window::doCalc2(const std::ifstream *ifs, int i) {
-    switch (i) {
+void window::doCalc2(const std::ifstream *ifs, int iEnum) {
+    switch (iEnum) {
         case static_cast<int>(HashEnum::MD5) : {
             std::string md5str = MD4_5::md5_digestHex16((std::istream &) *ifs);
             hashData->setHashData(HashEnum::MD5, md5str);
@@ -139,15 +150,26 @@ void window::doCalc2(const std::ifstream *ifs, int i) {
         }
             break;
         case static_cast<int>(HashEnum::SHA1): {
-            std::string sha1str = sha::sha1_digestHex16((std::istream &) *ifs);
-            hashData->setHashData(HashEnum::SHA1, sha1str);
+            std::string sha = sha::sha1_digestHex16((std::istream &) *ifs);
+            hashData->setHashData(HashEnum::SHA1, sha);
         }
             break;
-        case static_cast<int>(HashEnum::SHA256):
+        case static_cast<int>(HashEnum::SHA256): {
+            std::string sha = sha::sha256_digestHex16((std::istream &) *ifs);
+            hashData->setHashData(HashEnum::SHA256, sha);
+        }
             break;
-        case static_cast<int>(HashEnum::SHA384):
+        case static_cast<int>(HashEnum::SHA384): {
+            std::string sha = sha::sha384_digestHex16((std::istream &) *ifs);
+            hashData->setHashData(HashEnum::SHA384, sha);
+        }
             break;
-        case static_cast<int>(HashEnum::SHA512):
+        case static_cast<int>(HashEnum::SHA512): {
+            std::string sha = sha::sha512_digestHex16((std::istream &) *ifs);
+            hashData->setHashData(HashEnum::SHA512, sha);
+        }
+            break;
+        default:
             break;
     }
 }

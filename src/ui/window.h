@@ -20,9 +20,9 @@ private:
 
     void calculate();
 
-    void doCalc1(const std::istringstream *iss, int i);
+    void doCalc1(const std::istringstream *iss, int iEnum);
 
-    void doCalc2(const std::ifstream *ifs, int i);
+    void doCalc2(const std::ifstream *ifs, int iEnum);
 };
 
 #endif // WINDOW_H

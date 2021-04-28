@@ -5,9 +5,15 @@
 #include "str.h"
 #include <sstream>
 
-std::string str::HexToString(const unsigned char *data, size_t size) {
-    static const char hex[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+std::string str::HexToString(const unsigned char *data, size_t size, bool uppercase) {
+    static const char lower_hex[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+    static const char upper_hex[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+
     std::stringstream ss;
+    char *hex = const_cast<char *>(lower_hex);
+    if (uppercase) {
+        hex = const_cast<char *>(upper_hex);
+    }
     for (size_t i = 0; i < size; ++i)
         ss << hex[(data[i] >> 4)] << hex[(data[i] & 0x0F)];
     return ss.str();

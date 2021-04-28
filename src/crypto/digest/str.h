@@ -10,7 +10,7 @@
 class str {
 
 public:
-    static std::string HexToString(const unsigned char *data, size_t size);
+    static std::string HexToString(const unsigned char *data, size_t size, bool uppercase = false);
 };
 
 
