@@ -4,6 +4,7 @@
 
 #include "hashdata.h"
 #include "hashdataModel.h"
+#include "../config.h"
 
 #include <QGridLayout>
 #include <QCheckBox>
@@ -21,9 +22,27 @@ HashData::HashData(QWidget *parent) :
         qlineEdit->setReadOnly(true);
         mainLayout->addWidget(qlineEdit, i, 1);
     }
+    setHashBox();
 }
 
-HashData::~HashData() = default;
+HashData::~HashData() {
+
+    std::string s;
+
+    int len = mainLayout->rowCount() - 1;
+    for (int i = 0; i < len; ++i) {
+        auto *cb = dynamic_cast<QCheckBox *>(mainLayout->itemAtPosition(i, 0)->widget());
+        if (cb->isChecked()) {
+            s.append(std::to_string(i)).append(",");
+        }
+    }
+    auto *cb = dynamic_cast<QCheckBox *>(mainLayout->itemAtPosition(len, 0)->widget());
+    if (cb->isChecked()) {
+        s.append(std::to_string(len));
+    }
+
+    ConfigIni::getInstance().iniWrite(QStringLiteral("Hash/data"), QString::fromStdString(s));
+}
 
 std::vector<int> HashData::getHashList() {
     std::vector<int> ret;
@@ -37,6 +56,20 @@ std::vector<int> HashData::getHashList() {
 
     return ret;
 }
+
+void HashData::setHashBox() {
+    auto s = ConfigIni::getInstance().iniRead(QStringLiteral("Hash/data"), "").toString();
+    if (s.isEmpty()) {
+        return;
+    }
+    for (int i = 0; i < mainLayout->rowCount(); ++i) {
+        auto *cb = dynamic_cast<QCheckBox *>(mainLayout->itemAtPosition(i, 0)->widget());
+        if (s.contains(QString::number(i), Qt::CaseInsensitive)) {
+            cb->setCheckState(Qt::Checked);
+        }
+    }
+}
+
 
 void HashData::refresh() {
     auto *m = dynamic_cast<HashDataModel *>(this->model);

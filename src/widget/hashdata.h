@@ -28,6 +28,8 @@ public:
 
 private:
     QGridLayout *mainLayout;
+
+    void setHashBox();
 };
 
 
