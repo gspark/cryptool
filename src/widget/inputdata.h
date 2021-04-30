@@ -32,6 +32,13 @@ public:
 
     std::istream *getData();
 
+public :
+Q_SIGNALS:
+
+    void dataTypeChanged();
+
+    void dataChanged();
+
 private slots:
 
     void browse();

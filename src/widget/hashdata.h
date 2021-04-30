@@ -26,6 +26,8 @@ public:
 
     std::vector<int> getHashList();
 
+    void clearData();
+
 private:
     QGridLayout *mainLayout;
 

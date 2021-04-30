@@ -30,7 +30,7 @@ MainView::MainView(QWidget *parent)
     inputData = new InputData();
     mainLayout->addWidget(inputData);
 
-    HashDataModel *hashDataModel = new HashDataModel;
+    auto *hashDataModel = new HashDataModel;
     hashData = new HashData();
     hashData->setModel(hashDataModel);
 
@@ -43,9 +43,12 @@ MainView::MainView(QWidget *parent)
     mainLayout->addWidget(buttonBox);
     setLayout(mainLayout);
 
-    MainViewModel *mainViewModel = new MainViewModel();
+    auto *mainViewModel = new MainViewModel();
     mainViewModel->setHashDataModel(hashDataModel);
     this->setModel(mainViewModel);
+
+    connect(inputData, &InputData::dataTypeChanged, hashData, &HashData::clearData);
+    connect(inputData, &InputData::dataChanged, hashData, &HashData::clearData);
 
     this->resize(ConfigIni::getInstance().iniRead(QStringLiteral("MainView/size"), this->sizeHint()).toSize());
 }

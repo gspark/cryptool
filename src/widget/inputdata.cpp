@@ -39,12 +39,14 @@ InputData::InputData(QWidget *parent) :
     dataLineEdit = new QLineEdit;
 
     setDateType(dateType);
+
+    connect(fileName, &QLineEdit::textChanged, this, &InputData::dataTypeChanged);
+    connect(dataLineEdit, &QLineEdit::textChanged, this, &InputData::dataTypeChanged);
 }
 
 InputData::~InputData() {
     ConfigIni::getInstance().iniWrite(QStringLiteral("Hash/dataType"), dataTypeCbBox->currentIndex());
 }
-
 
 void InputData::browse() {
     QString selectFile = QFileDialog::getOpenFileName(
@@ -91,6 +93,8 @@ void InputData::setDateType(int index) {
         mainLayout->addWidget(dataLineEdit, 1, 1, 1, 2);
         dataLineEdit->show();
     }
+
+    emit dataTypeChanged();
 }
 
 std::istream *InputData::getData() {

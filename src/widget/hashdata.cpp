@@ -18,9 +18,9 @@ HashData::HashData(QWidget *parent) :
 
     for (int i = 0; i < HashLength; ++i) {
         mainLayout->addWidget(new QCheckBox(tr(HashEnumStrings[i])), i, 0);
-        auto qlineEdit = new QLineEdit;
-        qlineEdit->setReadOnly(true);
-        mainLayout->addWidget(qlineEdit, i, 1);
+        auto qLineEdit = new QLineEdit;
+        qLineEdit->setReadOnly(true);
+        mainLayout->addWidget(qLineEdit, i, 1);
     }
     setHashBox();
 }
@@ -86,5 +86,15 @@ void HashData::refresh() {
         if (m->hashDataMap.find(i) != m->hashDataMap.end()) {
             qlineEdit->setText(QString::fromStdString(m->hashDataMap[i]));
         }
+    }
+}
+
+void HashData::clearData() {
+    for (int i = 0; i < HashLength; ++i) {
+        auto *qLineEdit = dynamic_cast<QLineEdit *>(mainLayout->itemAtPosition(i, 1)->widget());
+        if (nullptr == qLineEdit) {
+            continue;
+        }
+        qLineEdit->clear();
     }
 }
