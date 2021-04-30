@@ -1,11 +1,14 @@
-#include "ui/window.h"
+#include "widget/mainView.h"
+#include "widget/mainViewPresenter.h"
 
 #include <QApplication>
+
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    window w;
+    MainView w;
+    MainViewPresenter mainViewPresenter(&w);
     w.show();
-    return a.exec();
+    return QApplication::exec();
 }

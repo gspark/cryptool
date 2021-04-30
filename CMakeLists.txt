@@ -29,16 +29,20 @@ set(REQUIRED_LIBS_QUALIFIED Qt5::Core Qt5::Gui Qt5::Widgets)
 
 add_executable(${PROJECT_NAME} WIN32
         src/main.cpp
-        src/ui/window.h
-        src/ui/window.cpp
+        src/widget/mainView.h
+        src/widget/mainView.cpp
         src/crypto/digest/md4_5.h
         src/crypto/digest/md4_5.cpp
-        src/ui/inputdata.cpp
-        src/ui/inputdata.h
-        src/ui/hashdata.cpp
-        src/ui/hashdata.h
+        src/widget/inputdata.cpp
+        src/widget/inputdata.h
+        src/widget/hashdata.cpp
+        src/widget/hashdata.h
         src/config.cpp
-        src/config.h src/crypto/digest/str.cpp src/crypto/digest/str.h src/crypto/digest/sha.cpp src/crypto/digest/sha.h)
+        src/config.h src/crypto/digest/str.cpp src/crypto/digest/str.h src/crypto/digest/sha.cpp src/crypto/digest/sha.h
+        src/pattern/abstractView.h src/pattern/abstractPresenter.h src/pattern/abstractModel.h src/pattern/abstractView.cpp
+        src/pattern/abstractPresenter.cpp src/widget/mainViewPresenter.cpp src/widget/mainViewPresenter.h
+        src/widget/hashdataModel.cpp src/widget/hashdataModel.h src/widget/mainViewModel.cpp src/widget/mainViewModel.h
+        src/pattern/abstractModel.cpp)
 
 # 查找Qt库
 find_package(Qt${QT_VERSION} COMPONENTS ${REQUIRED_LIBS} REQUIRED)

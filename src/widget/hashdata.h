@@ -6,24 +6,14 @@
 #define CRYPTOOL_HASHDATA_H
 
 #include <QWidget>
+#include "../pattern/abstractView.h"
 
 QT_BEGIN_NAMESPACE
 class QGridLayout;
-
 QT_END_NAMESPACE
 
-enum class HashEnum {
-    MD5,
-    MD4,
-    SHA1,
-    SHA256,
-    SHA384,
-    SHA512
-};
 
-static const char *HashEnumStrings[] = {"MD5", "MD4", "SHA1", "SHA256", "SHA384", "SHA512"};
-
-class HashData : public QWidget {
+class HashData : public QWidget, public AbstractView {
 Q_OBJECT
 
 public:
@@ -32,9 +22,9 @@ public:
     ~HashData() override;
 
 public:
-    std::vector<int> getHashList();
+    void refresh() override;
 
-    void setHashData(HashEnum hashEnum, std::string &data);
+    std::vector<int> getHashList();
 
 private:
     QGridLayout *mainLayout;

@@ -15,7 +15,6 @@
 #include <QComboBox>
 #include <sstream>
 #include <fstream>
-#include <tchar.h>
 
 
 InputData::InputData(QWidget *parent) :
@@ -27,7 +26,8 @@ InputData::InputData(QWidget *parent) :
 
     connect(browseButton, &QAbstractButton::clicked, this, &InputData::browse);
 
-    initDateType();
+    int dateType = ConfigIni::getInstance().iniRead(QStringLiteral("Hash/dataType"), 0).toInt();
+    initDateType(dateType);
 
     mainLayout = new QGridLayout(this);
     mainLayout->setContentsMargins(0, 0, 0, 0);
@@ -38,11 +38,12 @@ InputData::InputData(QWidget *parent) :
 
     dataLineEdit = new QLineEdit;
 
-    int dateType = ConfigIni::getInstance().iniRead(QStringLiteral("Hash/dataType"), 0).toInt();
     setDateType(dateType);
 }
 
-InputData::~InputData() = default;
+InputData::~InputData() {
+    ConfigIni::getInstance().iniWrite(QStringLiteral("Hash/dataType"), dataTypeCbBox->currentIndex());
+}
 
 
 void InputData::browse() {
@@ -56,12 +57,13 @@ void InputData::browse() {
     }
 }
 
-void InputData::initDateType() {
+void InputData::initDateType(int currentIdx) {
     dataTypeCbBox = new QComboBox(this);
 
     for (auto &s : this->dataType) {
         dataTypeCbBox->addItem(QString::fromStdString(s));
     }
+    dataTypeCbBox->setCurrentIndex(currentIdx);
 
     connect(dataTypeCbBox, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &InputData::setDateType);
@@ -75,14 +77,14 @@ void InputData::setDateType(int index) {
         }
         mainLayout->addWidget(fileName, 1, 1);
         mainLayout->addWidget(browseButton, 1, 2);
-        if (fileName->isHidden()) {
+        if (!fileName->isVisible()) {
             fileName->show();
             browseButton->show();
         }
     } else if (index == 1) {
         mainLayout->removeWidget(fileName);
         mainLayout->removeWidget(browseButton);
-        if (fileName->isVisible()) {
+        if (!fileName->isHidden()) {
             fileName->hide();
             browseButton->hide();
         }

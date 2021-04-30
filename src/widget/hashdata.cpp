@@ -3,6 +3,7 @@
 //
 
 #include "hashdata.h"
+#include "hashdataModel.h"
 
 #include <QGridLayout>
 #include <QCheckBox>
@@ -14,8 +15,7 @@ HashData::HashData(QWidget *parent) :
 
     mainLayout->setContentsMargins(0, 0, 0, 0);
 
-    unsigned int len = sizeof(HashEnumStrings) / sizeof(HashEnumStrings[0]);
-    for (int i = 0; i < len; ++i) {
+    for (int i = 0; i < HashLength; ++i) {
         mainLayout->addWidget(new QCheckBox(tr(HashEnumStrings[i])), i, 0);
         auto qlineEdit = new QLineEdit;
         qlineEdit->setReadOnly(true);
@@ -38,8 +38,20 @@ std::vector<int> HashData::getHashList() {
     return ret;
 }
 
-void HashData::setHashData(HashEnum hashEnum, std::string &data) {
-    int ihash = static_cast<int>(hashEnum);
-    auto *qlineEdit = dynamic_cast<QLineEdit *>(mainLayout->itemAtPosition(ihash, 1)->widget());
-    qlineEdit->setText(QString::fromStdString(data));
+void HashData::refresh() {
+    auto *m = dynamic_cast<HashDataModel *>(this->model);
+    if (nullptr == m) {
+        return;
+    }
+
+    for (int i = 0; i < HashLength; ++i) {
+        auto *qlineEdit = dynamic_cast<QLineEdit *>(mainLayout->itemAtPosition(i, 1)->widget());
+        if (nullptr == qlineEdit) {
+            continue;
+        }
+
+        if (m->hashDataMap.find(i) != m->hashDataMap.end()) {
+            qlineEdit->setText(QString::fromStdString(m->hashDataMap[i]));
+        }
+    }
 }

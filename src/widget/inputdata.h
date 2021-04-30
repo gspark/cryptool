@@ -47,7 +47,7 @@ private:
 
     QLineEdit *dataLineEdit;
 
-    void initDateType();
+    void initDateType(int currentIdx);
 };
 
 
