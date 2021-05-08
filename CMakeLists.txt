@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 # 工程名
-project(cryptool LANGUAGES CXX)
+project(cryptool LANGUAGES CXX VERSION 0.0.1)
 
 #set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -42,7 +42,7 @@ add_executable(${PROJECT_NAME} WIN32
         src/pattern/abstractView.h src/pattern/abstractPresenter.h src/pattern/abstractModel.h src/pattern/abstractView.cpp
         src/pattern/abstractPresenter.cpp src/widget/mainViewPresenter.cpp src/widget/mainViewPresenter.h
         src/widget/hashdataModel.cpp src/widget/hashdataModel.h src/widget/mainViewModel.cpp src/widget/mainViewModel.h
-        src/pattern/abstractModel.cpp src/crypto/digest/sm3.cpp src/crypto/digest/sm3.h)
+        src/pattern/abstractModel.cpp src/crypto/digest/sm3.cpp src/crypto/digest/sm3.h src/resource.rc)
 
 # 查找Qt库
 find_package(Qt${QT_VERSION} COMPONENTS ${REQUIRED_LIBS} REQUIRED)
