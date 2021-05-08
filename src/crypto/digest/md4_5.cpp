@@ -16,11 +16,11 @@ MD4_5::MD4_5() = default;
 
 MD4_5::~MD4_5() = default;
 
-std::string MD4_5::md5_digestHex16(const std::string &data) {
-    return md5_digestHex16(data.c_str(), data.size());
+std::string MD4_5::md5_digestHex(const std::string &data) {
+    return md5_digestHex(data.c_str(), data.size());
 }
 
-std::string MD4_5::md5_digestHex16(const char *data, size_t size) {
+std::string MD4_5::md5_digestHex(const char *data, size_t size) {
     if (!data) {
         return std::string();
     }
@@ -31,7 +31,7 @@ std::string MD4_5::md5_digestHex16(const char *data, size_t size) {
     return str::HexToString(md, MD5_DIGEST_LENGTH);
 }
 
-std::string MD4_5::md5_digestHex16(std::istream &stream) {
+std::string MD4_5::md5_digestHex(std::istream &stream) {
     auto ctx = EVP_MD_CTX_create();
     unsigned char md_value[EVP_MAX_MD_SIZE];
     unsigned int md_len = 0;
@@ -59,11 +59,11 @@ std::string MD4_5::md5_digestHex16(std::istream &stream) {
     return str::HexToString(md_value, md_len);
 }
 
-std::string MD4_5::md4_digestHex16(const std::string &data) {
-    return md4_digestHex16(data.c_str(), data.size());
+std::string MD4_5::md4_digestHex(const std::string &data) {
+    return md4_digestHex(data.c_str(), data.size());
 }
 
-std::string MD4_5::md4_digestHex16(const char *data, size_t size) {
+std::string MD4_5::md4_digestHex(const char *data, size_t size) {
     if (nullptr == data || size <= 0) {
         return std::string();
     }
@@ -74,7 +74,7 @@ std::string MD4_5::md4_digestHex16(const char *data, size_t size) {
     return str::HexToString(md, MD4_DIGEST_LENGTH);
 }
 
-std::string MD4_5::md4_digestHex16(std::istream &stream) {
+std::string MD4_5::md4_digestHex(std::istream &stream) {
     auto ctx = EVP_MD_CTX_create();
     unsigned char md_value[EVP_MAX_MD_SIZE];
     unsigned int md_len = 0;

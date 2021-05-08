@@ -9,6 +9,7 @@
 
 #include "../crypto/digest/md4_5.h"
 #include "../crypto/digest/sha.h"
+#include "../crypto/digest/sm3.h"
 
 #include <thread>
 
@@ -96,33 +97,38 @@ void MainViewPresenter::doCalc1(const std::istringstream *iss, int iEnum) {
 
     switch (iEnum) {
         case static_cast<int>(HashEnum::MD5) : {
-            std::string md5str = MD4_5::md5_digestHex16(iss->str());
+            std::string md5str = MD4_5::md5_digestHex(iss->str());
             m->getHashDataModel()->setHashData(HashEnum::MD5, md5str);
         }
             break;
         case static_cast<int>(HashEnum::MD4) : {
-            std::string md4str = MD4_5::md4_digestHex16(iss->str());
+            std::string md4str = MD4_5::md4_digestHex(iss->str());
             m->getHashDataModel()->setHashData(HashEnum::MD4, md4str);
         }
             break;
         case static_cast<int>(HashEnum::SHA1): {
-            std::string sha = sha::sha1_digestHex16(iss->str());
+            std::string sha = sha::sha1_digestHex(iss->str());
             m->getHashDataModel()->setHashData(HashEnum::SHA1, sha);
         }
             break;
         case static_cast<int>(HashEnum::SHA256): {
-            std::string sha = sha::sha256_digestHex16(iss->str());
+            std::string sha = sha::sha256_digestHex(iss->str());
             m->getHashDataModel()->setHashData(HashEnum::SHA256, sha);
         }
             break;
         case static_cast<int>(HashEnum::SHA384): {
-            std::string sha = sha::sha384_digestHex16(iss->str());
+            std::string sha = sha::sha384_digestHex(iss->str());
             m->getHashDataModel()->setHashData(HashEnum::SHA384, sha);
         }
             break;
         case static_cast<int>(HashEnum::SHA512): {
-            std::string sha = sha::sha512_digestHex16(iss->str());
+            std::string sha = sha::sha512_digestHex(iss->str());
             m->getHashDataModel()->setHashData(HashEnum::SHA512, sha);
+        }
+            break;
+        case static_cast<int>(HashEnum::SM3): {
+            std::string sm3 = SM3::sm3_digestHex(iss->str());
+            m->getHashDataModel()->setHashData(HashEnum::SM3, sm3);
         }
             break;
         default:
@@ -144,35 +150,39 @@ void MainViewPresenter::doCalc2(const std::ifstream *ifs, int iEnum) {
 
     switch (iEnum) {
         case static_cast<int>(HashEnum::MD5) : {
-            std::string md5str = MD4_5::md5_digestHex16((std::istream &) *ifs);
+            std::string md5str = MD4_5::md5_digestHex((std::istream &) *ifs);
             m->getHashDataModel()->setHashData(HashEnum::MD5, md5str);
         }
             break;
         case static_cast<int>(HashEnum::MD4) : {
-            std::string md4str = MD4_5::md4_digestHex16((std::istream &) *ifs);
+            std::string md4str = MD4_5::md4_digestHex((std::istream &) *ifs);
             m->getHashDataModel()->setHashData(HashEnum::MD4, md4str);
         }
             break;
         case static_cast<int>(HashEnum::SHA1): {
-            std::string sha = sha::sha1_digestHex16((std::istream &) *ifs);
+            std::string sha = sha::sha1_digestHex((std::istream &) *ifs);
             m->getHashDataModel()->setHashData(HashEnum::SHA1, sha);
         }
             break;
         case static_cast<int>(HashEnum::SHA256): {
-            std::string sha = sha::sha256_digestHex16((std::istream &) *ifs);
+            std::string sha = sha::sha256_digestHex((std::istream &) *ifs);
             m->getHashDataModel()->setHashData(HashEnum::SHA256, sha);
         }
             break;
         case static_cast<int>(HashEnum::SHA384): {
-            std::string sha = sha::sha384_digestHex16((std::istream &) *ifs);
+            std::string sha = sha::sha384_digestHex((std::istream &) *ifs);
             m->getHashDataModel()->setHashData(HashEnum::SHA384, sha);
         }
             break;
         case static_cast<int>(HashEnum::SHA512): {
-            std::string sha = sha::sha512_digestHex16((std::istream &) *ifs);
+            std::string sha = sha::sha512_digestHex((std::istream &) *ifs);
             m->getHashDataModel()->setHashData(HashEnum::SHA512, sha);
         }
             break;
+        case static_cast<int>(HashEnum::SM3): {
+            std::string sm3 = SM3::sm3_digestHex((std::istream &) *ifs);
+            m->getHashDataModel()->setHashData(HashEnum::SM3, sm3);
+        }
         default:
             break;
     }

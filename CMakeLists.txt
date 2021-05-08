@@ -42,7 +42,7 @@ add_executable(${PROJECT_NAME} WIN32
         src/pattern/abstractView.h src/pattern/abstractPresenter.h src/pattern/abstractModel.h src/pattern/abstractView.cpp
         src/pattern/abstractPresenter.cpp src/widget/mainViewPresenter.cpp src/widget/mainViewPresenter.h
         src/widget/hashdataModel.cpp src/widget/hashdataModel.h src/widget/mainViewModel.cpp src/widget/mainViewModel.h
-        src/pattern/abstractModel.cpp)
+        src/pattern/abstractModel.cpp src/crypto/digest/sm3.cpp src/crypto/digest/sm3.h)
 
 # 查找Qt库
 find_package(Qt${QT_VERSION} COMPONENTS ${REQUIRED_LIBS} REQUIRED)

@@ -16,10 +16,11 @@ enum class HashEnum {
     SHA1,
     SHA256,
     SHA384,
-    SHA512
+    SHA512,
+    SM3
 };
 
-static const char *HashEnumStrings[] = {"MD5", "MD4", "SHA1", "SHA256", "SHA384", "SHA512"};
+static const char *HashEnumStrings[] = {"MD5", "MD4", "SHA1", "SHA256", "SHA384", "SHA512", "SM3"};
 
 static const unsigned int HashLength = sizeof(HashEnumStrings) / sizeof(HashEnumStrings[0]);
 

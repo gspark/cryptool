@@ -9,9 +9,9 @@
 #include <openssl/sha.h>
 #include <openssl/evp.h>
 
-std::string sha::sha_digestHex16(const char *data, size_t size,
-                                 unsigned char *(*sha)(const unsigned char *, size_t, unsigned char *),
-                                 int digestLength) {
+std::string sha::sha_digestHex(const char *data, size_t size,
+                               unsigned char *(*sha)(const unsigned char *, size_t, unsigned char *),
+                               int digestLength) {
     if (nullptr == data || size <= 0) {
         return std::string();
     }
@@ -20,7 +20,7 @@ std::string sha::sha_digestHex16(const char *data, size_t size,
     return str::HexToString(md, digestLength);
 }
 
-std::string sha::sha_digestHex16(std::istream &stream, void *(*EVP_sha)()) {
+std::string sha::sha_digestHex(std::istream &stream, void *(*EVP_sha)()) {
     auto ctx = EVP_MD_CTX_create();
     unsigned char md_value[EVP_MAX_MD_SIZE];
     unsigned int md_len = 0;
@@ -49,21 +49,21 @@ std::string sha::sha_digestHex16(std::istream &stream, void *(*EVP_sha)()) {
     return str::HexToString(md_value, md_len);
 }
 
-std::string sha::sha1_digestHex16(const std::string &data) {
-    return sha::sha1_digestHex16(data.c_str(), data.size());
+std::string sha::sha1_digestHex(const std::string &data) {
+    return sha::sha1_digestHex(data.c_str(), data.size());
 }
 
-std::string sha::sha1_digestHex16(const char *data, size_t size) {
+std::string sha::sha1_digestHex(const char *data, size_t size) {
 //    if (nullptr == data || size <= 0) {
 //        return std::string();
 //    }
 //    unsigned char md[SHA_DIGEST_LENGTH];
 //    ::SHA1(reinterpret_cast<const unsigned char *>(data), size, reinterpret_cast<unsigned char *>(&md));
 //    return str::HexToString(md, SHA_DIGEST_LENGTH);
-    return sha_digestHex16(data, size, ::SHA1, SHA_DIGEST_LENGTH);
+    return sha_digestHex(data, size, ::SHA1, SHA_DIGEST_LENGTH);
 }
 
-std::string sha::sha1_digestHex16(std::istream &stream) {
+std::string sha::sha1_digestHex(std::istream &stream) {
 //    auto ctx = EVP_MD_CTX_create();
 //    unsigned char md_value[EVP_MAX_MD_SIZE];
 //    unsigned int md_len = 0;
@@ -89,43 +89,43 @@ std::string sha::sha1_digestHex16(std::istream &stream) {
 //    EVP_MD_CTX_destroy(ctx);
 //
 //    return str::HexToString(md_value, md_len);
-    return sha_digestHex16(stream, reinterpret_cast<void *(*)()>(EVP_sha1));
+    return sha_digestHex(stream, reinterpret_cast<void *(*)()>(EVP_sha1));
 }
 
-std::string sha::sha256_digestHex16(const std::string &data) {
-    return sha::sha256_digestHex16(data.c_str(), data.size());
+std::string sha::sha256_digestHex(const std::string &data) {
+    return sha::sha256_digestHex(data.c_str(), data.size());
 }
 
-std::string sha::sha256_digestHex16(const char *data, size_t size) {
-    return sha_digestHex16(data, size, ::SHA256, SHA256_DIGEST_LENGTH);
+std::string sha::sha256_digestHex(const char *data, size_t size) {
+    return sha_digestHex(data, size, ::SHA256, SHA256_DIGEST_LENGTH);
 }
 
-std::string sha::sha256_digestHex16(std::istream &stream) {
-    return sha_digestHex16(stream, reinterpret_cast<void *(*)()>(EVP_sha256));
+std::string sha::sha256_digestHex(std::istream &stream) {
+    return sha_digestHex(stream, reinterpret_cast<void *(*)()>(EVP_sha256));
 }
 
-std::string sha::sha384_digestHex16(const std::string &data) {
-    return sha::sha384_digestHex16(data.c_str(), data.size());
+std::string sha::sha384_digestHex(const std::string &data) {
+    return sha::sha384_digestHex(data.c_str(), data.size());
 }
 
-std::string sha::sha384_digestHex16(const char *data, size_t size) {
-    return sha_digestHex16(data, size, ::SHA384, SHA384_DIGEST_LENGTH);
+std::string sha::sha384_digestHex(const char *data, size_t size) {
+    return sha_digestHex(data, size, ::SHA384, SHA384_DIGEST_LENGTH);
 }
 
-std::string sha::sha384_digestHex16(std::istream &stream) {
-    return sha_digestHex16(stream, reinterpret_cast<void *(*)()>(EVP_sha384));
+std::string sha::sha384_digestHex(std::istream &stream) {
+    return sha_digestHex(stream, reinterpret_cast<void *(*)()>(EVP_sha384));
 }
 
-std::string sha::sha512_digestHex16(const std::string &data) {
-    return sha::sha512_digestHex16(data.c_str(), data.size());
+std::string sha::sha512_digestHex(const std::string &data) {
+    return sha::sha512_digestHex(data.c_str(), data.size());
 }
 
-std::string sha::sha512_digestHex16(const char *data, size_t size) {
-    return sha_digestHex16(data, size, ::SHA512, SHA512_DIGEST_LENGTH);
+std::string sha::sha512_digestHex(const char *data, size_t size) {
+    return sha_digestHex(data, size, ::SHA512, SHA512_DIGEST_LENGTH);
 }
 
-std::string sha::sha512_digestHex16(std::istream &stream) {
-    return sha_digestHex16(stream, reinterpret_cast<void *(*)()>(EVP_sha512));
+std::string sha::sha512_digestHex(std::istream &stream) {
+    return sha_digestHex(stream, reinterpret_cast<void *(*)()>(EVP_sha512));
 }
 
 
