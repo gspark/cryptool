@@ -7,7 +7,8 @@
 #include <QSettings>
 
 ConfigIni::ConfigIni() : pathFile("cryptool.ini"), settings(new QSettings(pathFile, QSettings::IniFormat)) {
-    settings->setIniCodec("UTF-8");
+//    Qt5
+//    settings->setIniCodec("UTF-8");
 }
 
 ConfigIni::~ConfigIni() {
@@ -36,7 +37,8 @@ void ConfigIni::setPathFile(const QString &path_file) {
         settings->sync();
         // 改变路径
         QSettings::setPath(settings->format(), settings->scope(), path_file);
-        settings->setIniCodec("UTF-8");
+//        Qt5
+//        settings->setIniCodec("UTF-8");
     }
 }
 
