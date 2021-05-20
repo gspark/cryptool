@@ -17,6 +17,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #SET(CMAKE_C_COMPILE_OBJECT z:/temp/${PROJECT_NAME}/obj)
 #SET(CMAKE_CXX_COMPILE_OBJECT z:/temp/${PROJECT_NAME}/obj)
 
+#定义变量
 set(PREBUILT_LIB_DIRECTORY D:/ops/msys64/mingw64/lib)
 
 set(CMAKE_DEBUG_POSTFIX "d" CACHE STRING "add a postfix, usually d on windows")

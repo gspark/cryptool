@@ -1,0 +1,9 @@
+[
+    {
+        "name": "Mingw Compiler Kit",
+        "compilers": {
+            "C": "d:/ops/msys64/mingw64/bin/gcc.exe",
+            "CXX": "d:/ops/msys64/mingw64/bin/g++.exe"
+        }
+    }
+]

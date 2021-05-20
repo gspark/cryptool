@@ -1,0 +1,7 @@
+{
+    "cmake.generator": "MinGW Makefiles",
+    "cmake.buildDirectory": "${workspaceFolder}/build",
+    "cmake.buildArgs": [
+        "--parallel"
+    ]
+}
