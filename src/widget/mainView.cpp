@@ -3,6 +3,8 @@
 #include "mainViewModel.h"
 
 #include "../config.h"
+#include "../logger/Logger.h"
+#include "../component/DoubleClickedButton.h"
 
 #include <QDialogButtonBox>
 #include <QPushButton>
@@ -11,15 +13,15 @@
 #include <QComboBox>
 #include <QCoreApplication>
 
-
 MainView::MainView(QWidget *parent)
         : QWidget(parent) {
 
     auto *buttonBox = new QDialogButtonBox(Qt::Horizontal);
-    calcBtn = buttonBox->addButton(tr("&Calculate"), QDialogButtonBox::ActionRole);
+    calcBtn = new DoubleClickedButton(tr("&Calculate"), buttonBox);
+    buttonBox->addButton(calcBtn, QDialogButtonBox::ActionRole);
     QPushButton *closeBtn = buttonBox->addButton(QDialogButtonBox::Close);
 
-    connect(calcBtn, &QPushButton::clicked, this, &MainView::calcClicked);
+    connect(calcBtn, &DoubleClickedButton::singleClicked, this, &MainView::calcClicked);
     connect(closeBtn, &QPushButton::clicked, this, &QWidget::close);
 
     auto *line = new QFrame();
@@ -73,15 +75,20 @@ MainView::~MainView() {
 
 void MainView::calcClicked() {
 //    QCursor currCursor = this->cursor();
-    this->setCursor(Qt::BusyCursor);
+    LOG_INFO << "calcClicked() enable is" << this->calcBtn->isEnabled();
+//    disconnect(calcBtn, nullptr, nullptr, nullptr);
     this->calcBtn->setEnabled(false);
-    QCoreApplication::processEvents();
+//    this->calcBtn->setAttribute(Qt::WA_TransparentForMouseEvents, true);
+    this->setCursor(Qt::BusyCursor);
+//    QCoreApplication::processEvents();
     // 发送信号
     emit calculate(this);
+    LOG_INFO << "emit calculate(this)";
 }
 
 void MainView::refresh() {
     emit refreshView(this);
+    LOG_INFO << "MainView emit refreshView";
 }
 
 HashData *MainView::getHashDataView() {
@@ -95,5 +102,8 @@ InputData *MainView::getInputDataView() {
 void MainView::calcCompleted() {
     this->setCursor(Qt::ArrowCursor);
     this->calcBtn->setEnabled(true);
-    QCoreApplication::processEvents();
+//    this->calcBtn->clicked(true);
+//    connect(calcBtn, &QPushButton::clicked, this, &MainView::calcClicked);
+//    this->calcBtn->setAttribute(Qt::WA_TransparentForMouseEvents, false);
+//    QCoreApplication::processEvents();
 }

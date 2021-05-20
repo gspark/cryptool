@@ -102,9 +102,15 @@ std::istream *InputData::getData() {
     if (dataTypeCbBox->currentIndex() == 0) {
         // 0 is file
         // ifstream 的中文处理， string有问题
+        if (fileName->text().isEmpty()) {
+            return ret;
+        }
         ret = new std::ifstream(fileName->text().toStdWString().c_str(), std::ios_base::in | std::ios_base::binary);
     } else if (dataTypeCbBox->currentIndex() == 1) {
         // 1 is text
+        if (dataLineEdit->text().isEmpty()) {
+            return ret;
+        }
         ret = new std::istringstream(dataLineEdit->text().toStdString());
     }
     return ret;

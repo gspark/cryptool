@@ -19,6 +19,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(PREBUILT_LIB_DIRECTORY D:/ops/msys64/mingw64/lib)
 
+set(CMAKE_DEBUG_POSTFIX "d" CACHE STRING "add a postfix, usually d on windows")
+
 # Qt
 #include_directories(d:/osc/Qt/5.15.2/qtbase/src/*.c)
 #include_directories(d:/osc/Qt/5.15.2/qtbase/src/*.cpp)
@@ -43,7 +45,10 @@ add_executable(${PROJECT_NAME}
         src/pattern/abstractView.h src/pattern/abstractPresenter.h src/pattern/abstractModel.h src/pattern/abstractView.cpp
         src/pattern/abstractPresenter.cpp src/widget/mainViewPresenter.cpp src/widget/mainViewPresenter.h
         src/widget/hashdataModel.cpp src/widget/hashdataModel.h src/widget/mainViewModel.cpp src/widget/mainViewModel.h
-        src/pattern/abstractModel.cpp src/crypto/digest/sm3.cpp src/crypto/digest/sm3.h src/resource.rc)
+        src/pattern/abstractModel.cpp src/crypto/digest/sm3.cpp src/crypto/digest/sm3.h src/resource.rc
+        src/logger/Logger.h
+        src/logger/Logger.cpp
+        src/logger/LoggerTemplate.h src/component/DoubleClickedButton.cpp src/component/DoubleClickedButton.h)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
         WIN32_EXECUTABLE TRUE
@@ -84,8 +89,6 @@ endif ()
 #链接gcc-g++静态库
 if (MINGW)
     message(STATUS "is mingw")
-    #    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -static-libgcc")
-    #    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libgcc -static-libstdc++")
     #    set(CMAKE_SHARED_LIBRARY_LINK_C_FLAGS "${CMAKE_SHARED_LIBRARY_LINK_C_FLAGS} -static-libgcc -s")
     #    set(CMAKE_SHARED_LIBRARY_LINK_CXX_FLAGS "${CMAKE_SHARED_LIBRARY_LINK_CXX_FLAGS} -static-libgcc -static-libstdc++ -s")
     set(BUILD_SHARED_LIBS OFF)

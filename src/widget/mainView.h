@@ -6,6 +6,7 @@
 #include "inputdata.h"
 #include "hashdata.h"
 
+class DoubleClickedButton;
 
 class MainView : public QWidget, public AbstractView {
 Q_OBJECT
@@ -30,7 +31,7 @@ public:
     InputData *getInputDataView();
 
 private:
-    QPushButton *calcBtn;
+    DoubleClickedButton *calcBtn;
 
     InputData *inputData;
     HashData *hashData;

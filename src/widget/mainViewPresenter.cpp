@@ -7,6 +7,7 @@
 #include "mainViewModel.h"
 #include "mainView.h"
 
+#include "../logger/Logger.h"
 #include "../crypto/digest/md4_5.h"
 #include "../crypto/digest/sha.h"
 #include "../crypto/digest/sm3.h"
@@ -38,6 +39,7 @@ void MainViewPresenter::calculate(MainView *view) {
     std::istream *data_ptr = view->getInputDataView()->getData();
 
     if (nullptr == data_ptr) {
+        this->view->refresh();
         return;
     }
 
@@ -79,6 +81,7 @@ void MainViewPresenter::calculate(MainView *view) {
         delete ifs;
     }
 
+    LOG_INFO << "The calculation is complete";
     this->view->refresh();
 }
 
