@@ -32,6 +32,7 @@ list(APPEND CMAKE_PREFIX_PATH "d:/ops/qt-6.1.0-mingw64/static")
 #set(REQUIRED_LIBS_QUALIFIED Qt6::Core Qt6::Gui Qt6::Widgets)
 
 add_executable(${PROJECT_NAME}
+        src/resource.rc
         src/main.cpp
         src/widget/mainView.h
         src/widget/mainView.cpp
@@ -46,7 +47,7 @@ add_executable(${PROJECT_NAME}
         src/pattern/abstractView.h src/pattern/abstractPresenter.h src/pattern/abstractModel.h src/pattern/abstractView.cpp
         src/pattern/abstractPresenter.cpp src/widget/mainViewPresenter.cpp src/widget/mainViewPresenter.h
         src/widget/hashdataModel.cpp src/widget/hashdataModel.h src/widget/mainViewModel.cpp src/widget/mainViewModel.h
-        src/pattern/abstractModel.cpp src/crypto/digest/sm3.cpp src/crypto/digest/sm3.h src/resource.rc
+        src/pattern/abstractModel.cpp src/crypto/digest/sm3.cpp src/crypto/digest/sm3.h
         src/logger/Logger.h
         src/logger/Logger.cpp
         src/logger/LoggerTemplate.h src/component/DoubleClickedButton.cpp src/component/DoubleClickedButton.h)
