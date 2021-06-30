@@ -14,7 +14,7 @@ HashData::HashData(QWidget *parent) :
         QWidget(parent) {
     mainLayout = new QGridLayout(this);
 
-    mainLayout->setContentsMargins(0, 0, 0, 0);
+//    mainLayout->setContentsMargins(0, 0, 0, 0);
 
     for (int i = 0; i < HashLength; ++i) {
         mainLayout->addWidget(new QCheckBox(tr(HashEnumStrings[i])), i, 0);

@@ -8,6 +8,8 @@
 
 class DoubleClickedButton;
 
+class QTabWidget;
+
 class MainView : public QWidget, public AbstractView {
 Q_OBJECT
 
@@ -35,6 +37,8 @@ private:
 
     InputData *inputData;
     HashData *hashData;
+
+    QTabWidget * tabWidget;
 
     void calcClicked();
 

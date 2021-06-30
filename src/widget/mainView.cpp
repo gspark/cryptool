@@ -12,6 +12,7 @@
 #include <QLineEdit>
 #include <QComboBox>
 #include <QCoreApplication>
+#include <QTabWidget>
 
 MainView::MainView(QWidget *parent)
         : QWidget(parent) {
@@ -39,7 +40,10 @@ MainView::MainView(QWidget *parent)
     connect(this, &MainView::refreshView, hashData, &HashData::refresh);
     connect(this, &MainView::refreshView, this, &MainView::calcCompleted);
 
-    mainLayout->addWidget(hashData);
+    tabWidget = new QTabWidget(this);
+    tabWidget->addTab(hashData, tr("hash"));
+
+    mainLayout->addWidget(tabWidget);
     mainLayout->addStretch();
     mainLayout->addWidget(line);
     mainLayout->addWidget(buttonBox);
@@ -80,7 +84,7 @@ void MainView::calcClicked() {
     this->calcBtn->setEnabled(false);
 //    this->calcBtn->setAttribute(Qt::WA_TransparentForMouseEvents, true);
     this->setCursor(Qt::BusyCursor);
-//    QCoreApplication::processEvents();
+    QCoreApplication::processEvents();
     // 发送信号
     emit calculate(this);
     LOG_INFO << "emit calculate(this)";

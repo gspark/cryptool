@@ -27,7 +27,7 @@ set(CMAKE_DEBUG_POSTFIX "d" CACHE STRING "add a postfix, usually d on windows")
 #include_directories(d:/osc/Qt/5.15.2/qtbase/src/*.cpp)
 
 #set(CMAKE_MODULE_PATH d:/ops/qt-6.1.0-mingw64/static/lib/cmake/Qt6)
-list(APPEND CMAKE_PREFIX_PATH "d:/ops/qt-6.1.0-mingw64/static")
+list(APPEND CMAKE_PREFIX_PATH "d:/ops/qt-6.1.1-mingw64/static")
 #set(REQUIRED_LIBS Core Gui Widgets)
 #set(REQUIRED_LIBS_QUALIFIED Qt6::Core Qt6::Gui Qt6::Widgets)
 
