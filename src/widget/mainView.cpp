@@ -80,11 +80,15 @@ MainView::~MainView() {
 void MainView::calcClicked() {
 //    QCursor currCursor = this->cursor();
     LOG_INFO << "calcClicked() enable is" << this->calcBtn->isEnabled();
+    if (!this->calcBtn->isEnabled()) {
+        LOG_INFO << "calcClicked() enable is" << this->calcBtn->isEnabled();
+        return;
+    }
 //    disconnect(calcBtn, nullptr, nullptr, nullptr);
     this->calcBtn->setEnabled(false);
 //    this->calcBtn->setAttribute(Qt::WA_TransparentForMouseEvents, true);
     this->setCursor(Qt::BusyCursor);
-    QCoreApplication::processEvents();
+//    QCoreApplication::processEvents();
     // 发送信号
     emit calculate(this);
     LOG_INFO << "emit calculate(this)";

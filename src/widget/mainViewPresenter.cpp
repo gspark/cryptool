@@ -13,6 +13,7 @@
 #include "../crypto/digest/sm3.h"
 
 #include <thread>
+#include <QEventLoop>
 
 MainViewPresenter::MainViewPresenter(AbstractView *view, AbstractModel *model) : AbstractPresenter(view, model) {
     if (nullptr != view) {
@@ -43,6 +44,11 @@ void MainViewPresenter::calculate(MainView *view) {
         return;
     }
 
+    // 定义一个loop对象
+    QEventLoop loop;
+    // 绑定信号  在loop收到界面发送的signalRunOver信号后，退出循环
+    connect(view, &MainView::signalRunOver, &loop, &QEventLoop::quit);
+
     std::vector<std::thread *> ths;
     std::vector<std::ifstream *> ifstreams;
 
@@ -70,19 +76,28 @@ void MainViewPresenter::calculate(MainView *view) {
         }
     }
 
-    for (std::thread *thr: ths) {
-        thr->join();
-        delete thr;
-    }
+    std::thread testThread([&] {
+        // runResult = 连接网络 、拷贝文件、等等耗时操作  实际执行的任务放在这个位置执行
+        // 执行耗时操作完成后 发出信号  告知线程执行结束
+        for (std::thread *thr: ths) {
+            thr->join();
+            delete thr;
+        }
 
-    delete data_ptr;
+        delete data_ptr;
 
-    for (std::ifstream *ifs: ifstreams) {
-        delete ifs;
-    }
+        for (std::ifstream *ifs: ifstreams) {
+            delete ifs;
+        }
 
-    LOG_INFO << "The calculation is complete";
-    this->view->refresh();
+        LOG_INFO << "The calculation is complete";
+        emit view->signalRunOver();
+        this->view->refresh();
+    });
+    testThread.detach();
+
+    loop.exec();
+    LOG_INFO << "loop.exec(exit)";
 }
 
 

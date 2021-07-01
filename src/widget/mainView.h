@@ -25,6 +25,9 @@ Q_SIGNALS:
 
     void refreshView(MainView *view);
 
+    // 线程执行结束后发送此信号
+    void signalRunOver();
+
 public:
     void refresh() override;
 
