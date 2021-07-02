@@ -26,9 +26,7 @@ MainViewPresenter::MainViewPresenter(AbstractView *view, AbstractModel *model) :
 }
 
 MainViewPresenter::~MainViewPresenter() {
-    if (nullptr != model) {
-        delete this->model;
-    }
+    delete this->model;
 }
 
 void MainViewPresenter::calculate(MainView *view) {

@@ -38,10 +38,10 @@ add_executable(${PROJECT_NAME}
         src/widget/mainView.cpp
         src/crypto/digest/md4_5.h
         src/crypto/digest/md4_5.cpp
-        src/widget/inputdata.cpp
-        src/widget/inputdata.h
-        src/widget/hashdata.cpp
-        src/widget/hashdata.h
+        src/widget/inputdataView.cpp
+        src/widget/inputdataView.h
+        src/widget/hashdataView.cpp
+        src/widget/hashdataView.h
         src/config.cpp
         src/config.h src/crypto/digest/str.cpp src/crypto/digest/str.h src/crypto/digest/sha.cpp src/crypto/digest/sha.h
         src/pattern/abstractView.h src/pattern/abstractPresenter.h src/pattern/abstractModel.h src/pattern/abstractView.cpp

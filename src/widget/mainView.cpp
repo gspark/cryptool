@@ -30,14 +30,14 @@ MainView::MainView(QWidget *parent)
     line->setFrameShadow(QFrame::Sunken);
 
     auto *mainLayout = new QVBoxLayout;
-    inputData = new InputData();
+    inputData = new InputDataView();
     mainLayout->addWidget(inputData);
 
     auto *hashDataModel = new HashDataModel;
-    hashData = new HashData();
+    hashData = new HashDataView();
     hashData->setModel(hashDataModel);
 
-    connect(this, &MainView::refreshView, hashData, &HashData::refresh);
+    connect(this, &MainView::refreshView, hashData, &HashDataView::refresh);
     connect(this, &MainView::refreshView, this, &MainView::calcCompleted);
 
     tabWidget = new QTabWidget(this);
@@ -53,8 +53,8 @@ MainView::MainView(QWidget *parent)
     mainViewModel->setHashDataModel(hashDataModel);
     this->setModel(mainViewModel);
 
-    connect(inputData, &InputData::dataTypeChanged, hashData, &HashData::clearData);
-    connect(inputData, &InputData::dataChanged, hashData, &HashData::clearData);
+    connect(inputData, &InputDataView::dataTypeChanged, hashData, &HashDataView::clearData);
+    connect(inputData, &InputDataView::dataChanged, hashData, &HashDataView::clearData);
 
     this->resize(ConfigIni::getInstance().iniRead(QStringLiteral("MainView/size"), this->sizeHint()).toSize());
 }
@@ -81,15 +81,10 @@ void MainView::calcClicked() {
 //    QCursor currCursor = this->cursor();
     LOG_INFO << "calcClicked() enable is" << this->calcBtn->isEnabled();
     if (!this->calcBtn->isEnabled()) {
-        LOG_INFO << "calcClicked() enable is" << this->calcBtn->isEnabled();
         return;
     }
-//    disconnect(calcBtn, nullptr, nullptr, nullptr);
     this->calcBtn->setEnabled(false);
-//    this->calcBtn->setAttribute(Qt::WA_TransparentForMouseEvents, true);
     this->setCursor(Qt::BusyCursor);
-//    QCoreApplication::processEvents();
-    // 发送信号
     emit calculate(this);
     LOG_INFO << "emit calculate(this)";
 }
@@ -99,19 +94,15 @@ void MainView::refresh() {
     LOG_INFO << "MainView emit refreshView";
 }
 
-HashData *MainView::getHashDataView() {
+HashDataView *MainView::getHashDataView() {
     return this->hashData;
 }
 
-InputData *MainView::getInputDataView() {
+InputDataView *MainView::getInputDataView() {
     return this->inputData;
 }
 
 void MainView::calcCompleted() {
     this->setCursor(Qt::ArrowCursor);
     this->calcBtn->setEnabled(true);
-//    this->calcBtn->clicked(true);
-//    connect(calcBtn, &QPushButton::clicked, this, &MainView::calcClicked);
-//    this->calcBtn->setAttribute(Qt::WA_TransparentForMouseEvents, false);
-//    QCoreApplication::processEvents();
 }

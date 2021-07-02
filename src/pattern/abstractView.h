@@ -24,6 +24,7 @@ public:
     virtual void refresh() = 0;
 
 protected:
+    //{}对model初始化
     AbstractModel *model{};
 };
 

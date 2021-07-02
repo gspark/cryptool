@@ -3,8 +3,8 @@
 
 #include <QWidget>
 #include "../pattern/abstractView.h"
-#include "inputdata.h"
-#include "hashdata.h"
+#include "inputdataView.h"
+#include "hashdataView.h"
 
 class DoubleClickedButton;
 
@@ -31,15 +31,15 @@ Q_SIGNALS:
 public:
     void refresh() override;
 
-    HashData *getHashDataView();
+    HashDataView *getHashDataView();
 
-    InputData *getInputDataView();
+    InputDataView *getInputDataView();
 
 private:
     DoubleClickedButton *calcBtn;
 
-    InputData *inputData;
-    HashData *hashData;
+    InputDataView *inputData;
+    HashDataView *hashData;
 
     QTabWidget * tabWidget;
 
