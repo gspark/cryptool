@@ -29,12 +29,10 @@ MainViewPresenter::~MainViewPresenter() {
     delete this->model;
 }
 
-void MainViewPresenter::calculate(MainView *view) {
+void MainViewPresenter::calculate(MainView *view, CalculateEnum type) {
     if (nullptr == view) {
         return;
     }
-
-    std::vector<int> hashList = view->getHashDataView()->getHashList();
     std::istream *data_ptr = view->getInputDataView()->getData();
 
     if (nullptr == data_ptr) {
@@ -42,10 +40,23 @@ void MainViewPresenter::calculate(MainView *view) {
         return;
     }
 
+    switch (type) {
+        case CalculateEnum::hash:
+            hashCalc(view, data_ptr);
+            break;
+        case CalculateEnum::base64:
+            break;
+    }
+}
+
+
+void MainViewPresenter::hashCalc(MainView *view, std::istream *data_ptr) {
     // 定义一个loop对象
     QEventLoop loop;
     // 绑定信号  在loop收到界面发送的signalRunOver信号后，退出循环
     connect(view, &MainView::signalRunOver, &loop, &QEventLoop::quit);
+
+    std::vector<int> hashList = view->getHashDataView()->getHashList();
 
     std::vector<std::thread *> ths;
     std::vector<std::ifstream *> ifstreams;
@@ -203,5 +214,10 @@ void MainViewPresenter::doCalc2(const std::ifstream *ifs, int iEnum) {
             break;
     }
 }
+
+void MainViewPresenter::base64Calc(MainView *view) {
+
+}
+
 
 

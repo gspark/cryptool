@@ -5,6 +5,8 @@
 #include "../pattern/abstractView.h"
 #include "inputdataView.h"
 #include "hashdataView.h"
+#include "base64View.h"
+#include "mainViewModel.h"
 
 class DoubleClickedButton;
 
@@ -21,7 +23,7 @@ public:
 public:
 Q_SIGNALS:
 
-    void calculate(MainView *view);
+    void calculate(MainView *view, CalculateEnum type);
 
     void refreshView(MainView *view);
 
@@ -38,10 +40,12 @@ public:
 private:
     DoubleClickedButton *calcBtn;
 
-    InputDataView *inputData;
-    HashDataView *hashData;
+    InputDataView *inputDataView;
+    HashDataView *hashDataView;
 
-    QTabWidget * tabWidget;
+    Base64View *base64View;
+
+    QTabWidget *tabWidget;
 
     void calcClicked();
 

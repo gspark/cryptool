@@ -7,6 +7,7 @@
 
 #include <QObject>
 #include "../pattern/abstractPresenter.h"
+#include "mainViewModel.h"
 
 
 #include <sstream>
@@ -26,7 +27,11 @@ public:
 public:
 
 private:
-    void calculate(MainView *v);
+    void calculate(MainView *v, CalculateEnum type);
+
+    void hashCalc(MainView *view, std::istream *data_ptr);
+
+    void base64Calc(MainView *view);
 
     void doCalc1(const std::istringstream *iss, int iEnum);
 

@@ -30,18 +30,22 @@ MainView::MainView(QWidget *parent)
     line->setFrameShadow(QFrame::Sunken);
 
     auto *mainLayout = new QVBoxLayout;
-    inputData = new InputDataView();
-    mainLayout->addWidget(inputData);
+    inputDataView = new InputDataView();
+    mainLayout->addWidget(inputDataView);
 
     auto *hashDataModel = new HashDataModel;
-    hashData = new HashDataView();
-    hashData->setModel(hashDataModel);
+    hashDataView = new HashDataView();
+    hashDataView->setModel(hashDataModel);
 
-    connect(this, &MainView::refreshView, hashData, &HashDataView::refresh);
+    connect(this, &MainView::refreshView, hashDataView, &HashDataView::refresh);
     connect(this, &MainView::refreshView, this, &MainView::calcCompleted);
 
+    base64View = new Base64View();
+
     tabWidget = new QTabWidget(this);
-    tabWidget->addTab(hashData, tr("hash"));
+
+    tabWidget->addTab(hashDataView, tr(calculateEnumStrings[static_cast<int>(CalculateEnum::hash)]));
+    tabWidget->addTab(base64View, tr(calculateEnumStrings[static_cast<int>(CalculateEnum::base64)]));
 
     mainLayout->addWidget(tabWidget);
     mainLayout->addStretch();
@@ -53,8 +57,8 @@ MainView::MainView(QWidget *parent)
     mainViewModel->setHashDataModel(hashDataModel);
     this->setModel(mainViewModel);
 
-    connect(inputData, &InputDataView::dataTypeChanged, hashData, &HashDataView::clearData);
-    connect(inputData, &InputDataView::dataChanged, hashData, &HashDataView::clearData);
+    connect(inputDataView, &InputDataView::dataTypeChanged, hashDataView, &HashDataView::clearData);
+    connect(inputDataView, &InputDataView::dataChanged, hashDataView, &HashDataView::clearData);
 
     this->resize(ConfigIni::getInstance().iniRead(QStringLiteral("MainView/size"), this->sizeHint()).toSize());
 }
@@ -85,7 +89,13 @@ void MainView::calcClicked() {
     }
     this->calcBtn->setEnabled(false);
     this->setCursor(Qt::BusyCursor);
-    emit calculate(this);
+
+    if (tabWidget->isTabEnabled(static_cast<int>(CalculateEnum::hash))) {
+        emit calculate(this, CalculateEnum::hash);
+    } else if (tabWidget->isTabEnabled(static_cast<int>(CalculateEnum::base64))) {
+        emit calculate(this, CalculateEnum::base64);
+    }
+
     LOG_INFO << "emit calculate(this)";
 }
 
@@ -95,11 +105,11 @@ void MainView::refresh() {
 }
 
 HashDataView *MainView::getHashDataView() {
-    return this->hashData;
+    return this->hashDataView;
 }
 
 InputDataView *MainView::getInputDataView() {
-    return this->inputData;
+    return this->inputDataView;
 }
 
 void MainView::calcCompleted() {

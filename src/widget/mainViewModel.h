@@ -10,6 +10,13 @@
 
 class HashDataModel;
 
+enum class CalculateEnum {
+    hash,
+    base64
+};
+
+static const char *calculateEnumStrings[] = {"hash", "base64"};
+
 class MainViewModel : public AbstractModel {
 
 private:
