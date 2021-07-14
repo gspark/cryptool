@@ -1,5 +1,6 @@
 #include "mainView.h"
 #include "hashdataModel.h"
+#include "base64Model.h"
 #include "mainViewModel.h"
 
 #include "../config.h"
@@ -40,12 +41,16 @@ MainView::MainView(QWidget *parent)
     connect(this, &MainView::refreshView, hashDataView, &HashDataView::refresh);
     connect(this, &MainView::refreshView, this, &MainView::calcCompleted);
 
+    auto *base64Model = new Base64Model;
     base64View = new Base64View();
+    base64View->setModel(base64Model);
+    connect(this, &MainView::refreshView, base64View, &Base64View::refresh);
 
     tabWidget = new QTabWidget(this);
 
     tabWidget->addTab(hashDataView, tr(calculateEnumStrings[static_cast<int>(CalculateEnum::hash)]));
     tabWidget->addTab(base64View, tr(calculateEnumStrings[static_cast<int>(CalculateEnum::base64)]));
+    connect(tabWidget, &QTabWidget::currentChanged,this, &MainView::currentTabChanged);
 
     mainLayout->addWidget(tabWidget);
     mainLayout->addStretch();
@@ -90,12 +95,14 @@ void MainView::calcClicked() {
     this->calcBtn->setEnabled(false);
     this->setCursor(Qt::BusyCursor);
 
-    if (tabWidget->isTabEnabled(static_cast<int>(CalculateEnum::hash))) {
-        emit calculate(this, CalculateEnum::hash);
-    } else if (tabWidget->isTabEnabled(static_cast<int>(CalculateEnum::base64))) {
-        emit calculate(this, CalculateEnum::base64);
+    switch (tabWidget->currentIndex()) {
+        case static_cast<int>(CalculateEnum::hash):
+            emit calculate(this, CalculateEnum::hash);
+            break;
+        case static_cast<int>(CalculateEnum::base64):
+            emit calculate(this, CalculateEnum::base64);
+            break;
     }
-
     LOG_INFO << "emit calculate(this)";
 }
 
@@ -115,4 +122,16 @@ InputDataView *MainView::getInputDataView() {
 void MainView::calcCompleted() {
     this->setCursor(Qt::ArrowCursor);
     this->calcBtn->setEnabled(true);
+}
+
+void MainView::currentTabChanged(int index) {
+    auto *mainViewModel = dynamic_cast<MainViewModel *>(this->getModel());
+    if (nullptr == mainViewModel) {
+        return;
+    }
+    if (index == 0) {
+        mainViewModel->setHashDataModel(dynamic_cast<HashDataModel *>(this->hashDataView->getModel()));
+    } else if (index == 1) {
+        mainViewModel->setBase64Model(dynamic_cast<Base64Model *>(this->base64View->getModel()));
+    }
 }

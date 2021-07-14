@@ -31,11 +31,15 @@ private:
 
     void hashCalc(MainView *view, std::istream *data_ptr);
 
-    void base64Calc(MainView *view);
+    void base64Calc(MainView *view, std::istream *data_ptr);
 
     void doCalc1(const std::istringstream *iss, int iEnum);
 
     void doCalc2(const std::ifstream *ifs, int iEnum);
+
+    void doBase64Calc1(const std::istringstream *iss);
+
+    void doBase64Calc2(const std::ifstream *ifs);
 };
 
 

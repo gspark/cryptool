@@ -50,6 +50,8 @@ private:
     void calcClicked();
 
     void calcCompleted();
+
+    void currentTabChanged(int index);
 };
 
 #endif // WINDOW_H

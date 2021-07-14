@@ -4,13 +4,14 @@
 
 #include "mainViewPresenter.h"
 #include "hashdataModel.h"
-#include "mainViewModel.h"
+#include "base64Model.h"
 #include "mainView.h"
 
 #include "../logger/Logger.h"
 #include "../crypto/digest/md4_5.h"
 #include "../crypto/digest/sha.h"
 #include "../crypto/digest/sm3.h"
+#include "../crypto/digest/base64.h"
 
 #include <thread>
 #include <QEventLoop>
@@ -45,6 +46,7 @@ void MainViewPresenter::calculate(MainView *view, CalculateEnum type) {
             hashCalc(view, data_ptr);
             break;
         case CalculateEnum::base64:
+            base64Calc(view, data_ptr);
             break;
     }
 }
@@ -63,6 +65,7 @@ void MainViewPresenter::hashCalc(MainView *view, std::istream *data_ptr) {
 
     auto *iss = dynamic_cast<std::istringstream *>(data_ptr);
     if (nullptr != iss) {
+        // 字符串
         for (int i : hashList) {
             auto *thr = new std::thread(&MainViewPresenter::doCalc1, this, iss, i);
             ths.push_back(thr);
@@ -70,6 +73,7 @@ void MainViewPresenter::hashCalc(MainView *view, std::istream *data_ptr) {
     } else {
         auto *ifs = dynamic_cast<std::ifstream *>(data_ptr);
         if (nullptr != ifs) {
+            // 文件
             size_t len = hashList.size();
             for (size_t i = 0; i < len; ++i) {
                 auto *thr = new std::thread(&MainViewPresenter::doCalc2, this, ifs, hashList[i]);
@@ -86,8 +90,6 @@ void MainViewPresenter::hashCalc(MainView *view, std::istream *data_ptr) {
     }
 
     std::thread testThread([&] {
-        // runResult = 连接网络 、拷贝文件、等等耗时操作  实际执行的任务放在这个位置执行
-        // 执行耗时操作完成后 发出信号  告知线程执行结束
         for (std::thread *thr: ths) {
             thr->join();
             delete thr;
@@ -100,6 +102,8 @@ void MainViewPresenter::hashCalc(MainView *view, std::istream *data_ptr) {
         }
 
         LOG_INFO << "The calculation is complete";
+        // runResult = 连接网络 、拷贝文件、等等耗时操作  实际执行的任务放在这个位置执行
+        // 执行耗时操作完成后 发出信号  告知线程执行结束
         emit view->signalRunOver();
         this->view->refresh();
     });
@@ -215,8 +219,79 @@ void MainViewPresenter::doCalc2(const std::ifstream *ifs, int iEnum) {
     }
 }
 
-void MainViewPresenter::base64Calc(MainView *view) {
+void MainViewPresenter::base64Calc(MainView *view, std::istream *data_ptr) {
+    // 定义一个loop对象
+    QEventLoop loop;
+    // 绑定信号  在loop收到界面发送的signalRunOver信号后，退出循环
+    connect(view, &MainView::signalRunOver, &loop, &QEventLoop::quit);
+    auto *iss = dynamic_cast<std::istringstream *>(data_ptr);
+    std::thread *thr = nullptr;
+    if (nullptr != iss) {
+        // 字符串
+        thr = new std::thread(&MainViewPresenter::doBase64Calc1, this, iss);
 
+    } else {
+        auto *ifs = dynamic_cast<std::ifstream *>(data_ptr);
+        if (nullptr != ifs) {
+            // 文件
+            thr = new std::thread(&MainViewPresenter::doBase64Calc2, this, ifs);
+        }
+    }
+
+    std::thread testThread([&] {
+        thr->join();
+        delete thr;
+        delete data_ptr;
+        LOG_INFO << "The calculation is complete";
+        // runResult = 连接网络 、拷贝文件、等等耗时操作  实际执行的任务放在这个位置执行
+        // 执行耗时操作完成后 发出信号  告知线程执行结束
+        emit view->signalRunOver();
+        this->view->refresh();
+    });
+    testThread.detach();
+
+    loop.exec();
+    LOG_INFO << "loop.exec(exit)";
+}
+
+void MainViewPresenter::doBase64Calc1(const std::istringstream *iss) {
+    this->model = this->view->getModel();
+
+    if (nullptr == this->model) {
+        return;
+    }
+
+    auto *m = dynamic_cast<MainViewModel *>(this->model);
+    if (nullptr == m) {
+        return;
+    }
+
+    QString data = QString::fromStdString(iss->str());
+
+    std::string base64 = data.toLocal8Bit().toBase64().toStdString();
+
+    m->getBase64Model()->base64Data(base64);
+}
+
+void MainViewPresenter::doBase64Calc2(const std::ifstream *ifs) {
+    this->model = this->view->getModel();
+
+    if (nullptr == this->model) {
+        return;
+    }
+
+    auto *m = dynamic_cast<MainViewModel *>(this->model);
+    if (nullptr == m) {
+        return;
+    }
+
+    std::stringstream buffer;
+    buffer << ifs->rdbuf();
+
+    QString data = QString::fromStdString(buffer.str());
+    std::string base64 = data.toLocal8Bit().toBase64().toStdString();
+    LOG_INFO << "base64: " << base64.c_str();
+    m->getBase64Model()->base64Data(base64);
 }
 
 

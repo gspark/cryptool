@@ -5,6 +5,7 @@
 // You may need to build the project (run Qt uic code generator) to get "ui_base64View.h" resolved
 
 #include "base64View.h"
+#include "base64Model.h"
 #include <QGridLayout>
 #include <QCheckBox>
 #include <QTextEdit>
@@ -27,7 +28,11 @@ Base64View::Base64View(QWidget *parent) : QWidget(parent) {
 Base64View::~Base64View() = default;
 
 void Base64View::refresh() {
-    // todo
+    auto *m = dynamic_cast<Base64Model *>(this->model);
+    if (nullptr == m) {
+        return;
+    }
+    base64Result->setText(QString::fromStdString(m->data));
 }
 
 void Base64View::encryptStatus() {

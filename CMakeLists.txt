@@ -51,7 +51,11 @@ add_executable(${PROJECT_NAME}
         src/logger/Logger.h
         src/logger/Logger.cpp
         src/logger/LoggerTemplate.h src/component/DoubleClickedButton.cpp src/component/DoubleClickedButton.h
-        src/widget/base64View.cpp src/widget/base64View.h)
+        src/widget/base64View.cpp src/widget/base64View.h
+#        src/crypto/digest/base64.cpp
+#        src/crypto/digest/base64.h
+        src/widget/base64Model.cpp
+        src/widget/base64Model.h)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
         WIN32_EXECUTABLE TRUE
