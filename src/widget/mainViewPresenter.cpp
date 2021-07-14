@@ -256,41 +256,39 @@ void MainViewPresenter::base64Calc(MainView *view, std::istream *data_ptr) {
 
 void MainViewPresenter::doBase64Calc1(const std::istringstream *iss) {
     this->model = this->view->getModel();
-
     if (nullptr == this->model) {
         return;
     }
-
     auto *m = dynamic_cast<MainViewModel *>(this->model);
     if (nullptr == m) {
         return;
     }
-
     QString data = QString::fromStdString(iss->str());
 
-    std::string base64 = data.toLocal8Bit().toBase64().toStdString();
+    std::string base64;
+    if (m->getBase64Model()->isEncrypt()){
+        base64 = data.toLocal8Bit().toBase64().toStdString();
+    } else {
+        base64 = QByteArray::fromBase64(data.toLocal8Bit());
+    }
 
     m->getBase64Model()->base64Data(base64);
 }
 
 void MainViewPresenter::doBase64Calc2(const std::ifstream *ifs) {
     this->model = this->view->getModel();
-
     if (nullptr == this->model) {
         return;
     }
-
     auto *m = dynamic_cast<MainViewModel *>(this->model);
     if (nullptr == m) {
         return;
     }
-
     std::stringstream buffer;
     buffer << ifs->rdbuf();
 
     QString data = QString::fromStdString(buffer.str());
     std::string base64 = data.toLocal8Bit().toBase64().toStdString();
-    LOG_INFO << "base64: " << base64.c_str();
     m->getBase64Model()->base64Data(base64);
 }
 

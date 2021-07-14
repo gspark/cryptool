@@ -32,6 +32,8 @@ public:
 
     std::istream *getData();
 
+    bool dateTypeIsFile();
+
 public :
 Q_SIGNALS:
 

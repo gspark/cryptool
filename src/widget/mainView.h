@@ -52,6 +52,8 @@ private:
     void calcCompleted();
 
     void currentTabChanged(int index);
+
+    void dataTypeChanged();
 };
 
 #endif // WINDOW_H

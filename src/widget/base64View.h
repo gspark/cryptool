@@ -11,7 +11,7 @@
 
 QT_BEGIN_NAMESPACE
 class QGridLayout;
-class QTextEdit;
+class QPlainTextEdit;
 class QCheckBox;
 QT_END_NAMESPACE
 
@@ -25,11 +25,12 @@ public:
 
 public:
     void refresh() override;
-
+    void setEncrypt(bool flag);
+    void clearData();
 private:
     QGridLayout *mainLayout;
     QCheckBox *encryptCheckBox;
-    QTextEdit *base64Result;
+    QPlainTextEdit *base64Result;
 
     void encryptStatus();
 };

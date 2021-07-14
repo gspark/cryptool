@@ -115,3 +115,7 @@ std::istream *InputDataView::getData() {
     }
     return ret;
 }
+
+bool InputDataView::dateTypeIsFile() {
+    return dataTypeCbBox->currentIndex() == 0;
+}

@@ -64,6 +64,10 @@ MainView::MainView(QWidget *parent)
 
     connect(inputDataView, &InputDataView::dataTypeChanged, hashDataView, &HashDataView::clearData);
     connect(inputDataView, &InputDataView::dataChanged, hashDataView, &HashDataView::clearData);
+    connect(inputDataView, &InputDataView::dataChanged, base64View, &Base64View::clearData);
+    connect(inputDataView, &InputDataView::dataTypeChanged, base64View, &Base64View::clearData);
+
+    connect(inputDataView, &InputDataView::dataTypeChanged, this, &MainView::dataTypeChanged);
 
     this->resize(ConfigIni::getInstance().iniRead(QStringLiteral("MainView/size"), this->sizeHint()).toSize());
 }
@@ -133,5 +137,10 @@ void MainView::currentTabChanged(int index) {
         mainViewModel->setHashDataModel(dynamic_cast<HashDataModel *>(this->hashDataView->getModel()));
     } else if (index == 1) {
         mainViewModel->setBase64Model(dynamic_cast<Base64Model *>(this->base64View->getModel()));
+        this->base64View->setEncrypt(this->inputDataView->dateTypeIsFile());
     }
+}
+
+void MainView::dataTypeChanged() {
+    this->base64View->setEncrypt(this->inputDataView->dateTypeIsFile());
 }
