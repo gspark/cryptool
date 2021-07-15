@@ -33,7 +33,7 @@ InputDataView::InputDataView(QWidget *parent) :
     mainLayout = new QGridLayout(this);
     mainLayout->setContentsMargins(0, 0, 0, 0);
 
-    mainLayout->addWidget(new QLabel(tr("Data")), 0, 0);
+    mainLayout->addWidget(new QLabel(tr("Type")), 0, 0);
     mainLayout->addWidget(new QLabel(tr("Data:")), 0, 1, 1, 2);
     mainLayout->addWidget(dataTypeCbBox, 1, 0);
 
