@@ -9,6 +9,7 @@
 #include <QPushButton>
 #include <QLineEdit>
 #include <QFormLayout>
+#include <QPlainTextEdit>
 #include <QDir>
 #include <QFileDialog>
 #include <QLabel>
@@ -36,12 +37,14 @@ InputDataView::InputDataView(QWidget *parent) :
     mainLayout->addWidget(new QLabel(tr("Data:")), 0, 1, 1, 2);
     mainLayout->addWidget(dataTypeCbBox, 1, 0);
 
-    dataLineEdit = new QLineEdit;
-
+    dataLineEdit = new QPlainTextEdit;
+    dataLineEdit->setUndoRedoEnabled(false);
     setDateType(dateType);
 
-    connect(fileName, &QLineEdit::textChanged, this, &InputDataView::dataTypeChanged);
-    connect(dataLineEdit, &QLineEdit::textChanged, this, &InputDataView::dataTypeChanged);
+    connect(fileName, &QLineEdit::textChanged, this, &InputDataView::dataChanged);
+    connect(dataLineEdit, &QPlainTextEdit::textChanged, this, &InputDataView::dataChanged);
+
+    this->setMaximumHeight(this->heightMM());
 }
 
 InputDataView::~InputDataView() {
@@ -108,10 +111,11 @@ std::istream *InputDataView::getData() {
         ret = new std::ifstream(fileName->text().toStdWString().c_str(), std::ios_base::in | std::ios_base::binary);
     } else if (dataTypeCbBox->currentIndex() == 1) {
         // 1 is text
-        if (dataLineEdit->text().isEmpty()) {
+        QString txt = dataLineEdit->toPlainText();
+        if (txt.isEmpty()) {
             return ret;
         }
-        ret = new std::istringstream(dataLineEdit->text().toStdString());
+        ret = new std::istringstream(txt.toStdString());
     }
     return ret;
 }

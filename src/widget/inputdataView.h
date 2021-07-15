@@ -9,7 +9,10 @@
 #include <istream>
 
 QT_BEGIN_NAMESPACE
+
 class QLineEdit;
+
+class QPlainTextEdit;
 
 class QPushButton;
 
@@ -54,7 +57,7 @@ private:
     QPushButton *browseButton;
     QComboBox *dataTypeCbBox;
 
-    QLineEdit *dataLineEdit;
+    QPlainTextEdit *dataLineEdit;
 
     void initDateType(int currentIdx);
 };
