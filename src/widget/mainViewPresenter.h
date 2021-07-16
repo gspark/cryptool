@@ -33,9 +33,9 @@ private:
 
     void base64Calc(MainView *view, std::istream *data_ptr);
 
-    void doCalc1(const std::istringstream *iss, int iEnum);
+    void doCalc1(const std::istringstream *iss, int iEnum, const std::string *key = nullptr);
 
-    void doCalc2(const std::ifstream *ifs, int iEnum);
+    void doCalc2(const std::ifstream *ifs, int iEnum, const std::string *key = nullptr);
 
     void doBase64Calc1(const std::istringstream *iss);
 

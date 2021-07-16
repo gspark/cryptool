@@ -20,6 +20,8 @@ class QComboBox;
 
 class QGridLayout;
 
+class QCheckBox;
+
 QT_END_NAMESPACE
 
 class InputDataView : public QWidget {
@@ -36,6 +38,8 @@ public:
     std::istream *getData();
 
     bool dateTypeIsFile();
+
+    std::string *getHmacKey();
 
 public :
 Q_SIGNALS:
@@ -54,10 +58,16 @@ private:
     QGridLayout *mainLayout;
 
     QLineEdit *fileName;
+
     QPushButton *browseButton;
+
     QComboBox *dataTypeCbBox;
 
     QPlainTextEdit *dataLineEdit;
+
+    QCheckBox *hmacCheckBox;
+
+    QLineEdit *hmacKey;
 
     void initDateType(int currentIdx);
 };

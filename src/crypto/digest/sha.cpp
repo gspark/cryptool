@@ -8,6 +8,8 @@
 #include <sstream>
 #include <openssl/sha.h>
 #include <openssl/evp.h>
+#include <openssl/hmac.h>
+//#include "../../logger/Logger.h"
 
 std::string sha::sha_digestHex(const char *data, size_t size,
                                unsigned char *(*sha)(const unsigned char *, size_t, unsigned char *),
@@ -128,4 +130,96 @@ std::string sha::sha512_digestHex(std::istream &stream) {
     return sha_digestHex(stream, reinterpret_cast<void *(*)()>(EVP_sha512));
 }
 
+std::string sha::sha_hmacHex(void *(*EVP_sha)(), const char *data, size_t size, const char *key, size_t key_size) {
+    if (!data || !key) {
+        return std::string();
+    }
+
+//    LOG_INFO << "data:" << data << " key:" << key;
+//    LOG_INFO << "data_size:" << size << " key_size:" << key_size;
+
+    unsigned char buf[EVP_MAX_MD_SIZE];
+    unsigned int len;
+
+    HMAC(static_cast<EVP_MD *>((*EVP_sha)()), key, key_size, reinterpret_cast<const unsigned char *>(data), size,
+         reinterpret_cast<unsigned char *>(&buf),
+         &len);
+    return str::HexToString(buf, len);
+}
+
+std::string sha::sha_hmacHex(void *(*EVP_sha)(), std::istream &stream, std::string key) {
+    HMAC_CTX *ctx;
+    unsigned char buf[EVP_MAX_MD_SIZE];
+    unsigned int len;
+
+    ctx = HMAC_CTX_new();
+    if (nullptr == ctx) {
+        return std::string();
+    }
+    HMAC_CTX_get_md(ctx);
+    HMAC_Init_ex(ctx, key.c_str(), key.size(), static_cast<EVP_MD *>((*EVP_sha)()), NULL);
+
+    stream.seekg(0, std::istream::beg);
+    char streamBuffer[2048];
+    while (stream.good()) {
+        stream.read(streamBuffer, 2048);
+        auto bytesRead = stream.gcount();
+
+        if (bytesRead > 0) {
+            HMAC_Update(ctx, reinterpret_cast<const unsigned char *>(streamBuffer), bytesRead);
+        }
+    }
+    HMAC_Final(ctx, buf, &len);
+    HMAC_CTX_free(ctx);
+
+    return str::HexToString(buf, len);
+}
+
+std::string sha::sha1_hmacHex(const std::string &data, const std::string &key) {
+    return sha::sha1_hmacHex(data.c_str(), data.size(), key.c_str(), key.size());
+}
+
+std::string sha::sha1_hmacHex(const char *data, size_t size, const char *key, size_t key_size) {
+    return sha::sha_hmacHex(reinterpret_cast<void *(*)()>(EVP_sha1), data, size, key, key_size);
+}
+
+std::string sha::sha1_hmacHex(std::istream &stream, const std::string &key) {
+    return sha::sha_hmacHex(reinterpret_cast<void *(*)()>(EVP_sha1), stream, key);
+}
+
+std::string sha::sha256_hmacHex(const std::string &data, const std::string &key) {
+    return sha::sha256_hmacHex(data.c_str(), data.size(), key.c_str(), key.size());
+}
+
+std::string sha::sha256_hmacHex(const char *data, size_t size, const char *key, size_t key_size) {
+    return sha::sha_hmacHex(reinterpret_cast<void *(*)()>(EVP_sha256), data, size, key, key_size);
+}
+
+std::string sha::sha256_hmacHex(std::istream &stream, const std::string &key) {
+    return sha::sha_hmacHex(reinterpret_cast<void *(*)()>(EVP_sha256), stream, key);
+}
+
+std::string sha::sha384_hmacHex(const std::string &data, const std::string &key) {
+    return sha::sha384_hmacHex(data.c_str(), data.size(), key.c_str(), key.size());
+}
+
+std::string sha::sha384_hmacHex(const char *data, size_t size, const char *key, size_t key_size) {
+    return sha::sha_hmacHex(reinterpret_cast<void *(*)()>(EVP_sha384), data, size, key, key_size);
+}
+
+std::string sha::sha384_hmacHex(std::istream &stream, const std::string &key) {
+    return sha::sha_hmacHex(reinterpret_cast<void *(*)()>(EVP_sha384), stream, key);
+}
+
+std::string sha::sha512_hmacHex(const std::string &data, const std::string &key) {
+    return sha::sha512_hmacHex(data.c_str(), data.size(), key.c_str(), key.size());
+}
+
+std::string sha::sha512_hmacHex(const char *data, size_t size, const char *key, size_t key_size) {
+    return sha::sha_hmacHex(reinterpret_cast<void *(*)()>(EVP_sha512), data, size, key, key_size);
+}
+
+std::string sha::sha512_hmacHex(std::istream &stream, const std::string &key) {
+    return sha::sha_hmacHex(reinterpret_cast<void *(*)()>(EVP_sha512), stream, key);
+}
 

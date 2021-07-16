@@ -14,6 +14,7 @@
 #include <QFileDialog>
 #include <QLabel>
 #include <QComboBox>
+#include <QCheckBox>
 #include <sstream>
 #include <fstream>
 
@@ -41,10 +42,17 @@ InputDataView::InputDataView(QWidget *parent) :
     dataLineEdit->setUndoRedoEnabled(false);
     setDateType(dateType);
 
+    // HMAC
+    mainLayout->addWidget(new QLabel(tr("Key:")), 2, 1, 1, 2);
+    hmacCheckBox = new QCheckBox(tr("HMAC"));
+    mainLayout->addWidget(hmacCheckBox, 3, 0);
+    hmacKey = new QLineEdit(this);
+    mainLayout->addWidget(hmacKey, 3, 1, 1, 2);
+
     connect(fileName, &QLineEdit::textChanged, this, &InputDataView::dataChanged);
     connect(dataLineEdit, &QPlainTextEdit::textChanged, this, &InputDataView::dataChanged);
 
-    this->setMaximumHeight(this->heightMM());
+    this->setMaximumHeight(dataTypeCbBox->heightMM() * 10 + dataLineEdit->heightMM());
 }
 
 InputDataView::~InputDataView() {
@@ -122,4 +130,11 @@ std::istream *InputDataView::getData() {
 
 bool InputDataView::dateTypeIsFile() {
     return dataTypeCbBox->currentIndex() == 0;
+}
+
+std::string *InputDataView::getHmacKey() {
+    if (!hmacCheckBox->isChecked()) {
+        return nullptr;
+    }
+    return new std::string(hmacKey->text().toStdString());;
 }

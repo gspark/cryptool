@@ -11,7 +11,6 @@
 #include "../crypto/digest/md4_5.h"
 #include "../crypto/digest/sha.h"
 #include "../crypto/digest/sm3.h"
-#include "../crypto/digest/base64.h"
 
 #include <thread>
 #include <QEventLoop>
@@ -60,6 +59,8 @@ void MainViewPresenter::hashCalc(MainView *view, std::istream *data_ptr) {
 
     std::vector<int> hashList = view->getHashDataView()->getHashList();
 
+    std::string *hmacKey = view->getInputDataView()->getHmacKey();
+
     std::vector<std::thread *> ths;
     std::vector<std::ifstream *> ifstreams;
 
@@ -67,7 +68,7 @@ void MainViewPresenter::hashCalc(MainView *view, std::istream *data_ptr) {
     if (nullptr != iss) {
         // 字符串
         for (int i : hashList) {
-            auto *thr = new std::thread(&MainViewPresenter::doCalc1, this, iss, i);
+            auto *thr = new std::thread(&MainViewPresenter::doCalc1, this, iss, i, hmacKey);
             ths.push_back(thr);
         }
     } else {
@@ -76,10 +77,10 @@ void MainViewPresenter::hashCalc(MainView *view, std::istream *data_ptr) {
             // 文件
             size_t len = hashList.size();
             for (size_t i = 0; i < len; ++i) {
-                auto *thr = new std::thread(&MainViewPresenter::doCalc2, this, ifs, hashList[i]);
+                auto *thr = new std::thread(&MainViewPresenter::doCalc2, this, ifs, hashList[i], hmacKey);
                 ths.push_back(thr);
 
-                // ifstream 线程不安全
+                // ifstream 线程不安全，获取新的 ifstream 对象
                 if (i < len - 1) {
                     ifstreams.push_back(ifs);
                     data_ptr = view->getInputDataView()->getData();
@@ -101,6 +102,8 @@ void MainViewPresenter::hashCalc(MainView *view, std::istream *data_ptr) {
             delete ifs;
         }
 
+        delete hmacKey;
+
         LOG_INFO << "The calculation is complete";
         // runResult = 连接网络 、拷贝文件、等等耗时操作  实际执行的任务放在这个位置执行
         // 执行耗时操作完成后 发出信号  告知线程执行结束
@@ -114,7 +117,7 @@ void MainViewPresenter::hashCalc(MainView *view, std::istream *data_ptr) {
 }
 
 
-void MainViewPresenter::doCalc1(const std::istringstream *iss, int iEnum) {
+void MainViewPresenter::doCalc1(const std::istringstream *iss, int iEnum, const std::string *key) {
     this->model = this->view->getModel();
 
     if (nullptr == this->model) {
@@ -128,32 +131,38 @@ void MainViewPresenter::doCalc1(const std::istringstream *iss, int iEnum) {
 
     switch (iEnum) {
         case static_cast<int>(HashEnum::MD5) : {
-            std::string md5str = MD4_5::md5_digestHex(iss->str());
+            std::string md5str =
+                    nullptr == key ? MD4_5::md5_digestHex(iss->str()) : MD4_5::md5_hmacHex(iss->str(), *key);
             m->getHashDataModel()->setHashData(HashEnum::MD5, md5str);
         }
             break;
         case static_cast<int>(HashEnum::MD4) : {
-            std::string md4str = MD4_5::md4_digestHex(iss->str());
+            std::string md4str =
+                    nullptr == key ? MD4_5::md4_digestHex(iss->str()) : MD4_5::md4_hmacHex(iss->str(), *key);
             m->getHashDataModel()->setHashData(HashEnum::MD4, md4str);
         }
             break;
         case static_cast<int>(HashEnum::SHA1): {
-            std::string sha = sha::sha1_digestHex(iss->str());
+            std::string sha =
+                    nullptr == key ? sha::sha1_digestHex(iss->str()) : sha::sha1_hmacHex(iss->str(), *key);
             m->getHashDataModel()->setHashData(HashEnum::SHA1, sha);
         }
             break;
         case static_cast<int>(HashEnum::SHA256): {
-            std::string sha = sha::sha256_digestHex(iss->str());
+            std::string sha =
+                    nullptr == key ? sha::sha256_digestHex(iss->str()) : sha::sha256_hmacHex(iss->str(), *key);
             m->getHashDataModel()->setHashData(HashEnum::SHA256, sha);
         }
             break;
         case static_cast<int>(HashEnum::SHA384): {
-            std::string sha = sha::sha384_digestHex(iss->str());
+            std::string sha =
+                    nullptr == key ? sha::sha384_digestHex(iss->str()) : sha::sha384_hmacHex(iss->str(), *key);
             m->getHashDataModel()->setHashData(HashEnum::SHA384, sha);
         }
             break;
         case static_cast<int>(HashEnum::SHA512): {
-            std::string sha = sha::sha512_digestHex(iss->str());
+            std::string sha =
+                    nullptr == key ? sha::sha512_digestHex(iss->str()) : sha::sha512_hmacHex(iss->str(), *key);
             m->getHashDataModel()->setHashData(HashEnum::SHA512, sha);
         }
             break;
@@ -167,7 +176,7 @@ void MainViewPresenter::doCalc1(const std::istringstream *iss, int iEnum) {
     }
 }
 
-void MainViewPresenter::doCalc2(const std::ifstream *ifs, int iEnum) {
+void MainViewPresenter::doCalc2(const std::ifstream *ifs, int iEnum, const std::string *key) {
     this->model = this->view->getModel();
 
     if (nullptr == this->model) {
@@ -181,32 +190,38 @@ void MainViewPresenter::doCalc2(const std::ifstream *ifs, int iEnum) {
 
     switch (iEnum) {
         case static_cast<int>(HashEnum::MD5) : {
-            std::string md5str = MD4_5::md5_digestHex((std::istream &) *ifs);
+            std::string md5str = nullptr == key ? MD4_5::md5_digestHex((std::istream &) *ifs) : MD4_5::md5_hmactHex(
+                    (std::istream &) *ifs, *key);
             m->getHashDataModel()->setHashData(HashEnum::MD5, md5str);
         }
             break;
         case static_cast<int>(HashEnum::MD4) : {
-            std::string md4str = MD4_5::md4_digestHex((std::istream &) *ifs);
+            std::string md4str = nullptr == key ? MD4_5::md4_digestHex((std::istream &) *ifs) : MD4_5::md4_hmactHex(
+                    (std::istream &) *ifs, *key);
             m->getHashDataModel()->setHashData(HashEnum::MD4, md4str);
         }
             break;
         case static_cast<int>(HashEnum::SHA1): {
-            std::string sha = sha::sha1_digestHex((std::istream &) *ifs);
+            std::string sha = nullptr == key ? sha::sha1_digestHex((std::istream &) *ifs) : sha::sha1_hmacHex(
+                    (std::istream &) *ifs, *key);
             m->getHashDataModel()->setHashData(HashEnum::SHA1, sha);
         }
             break;
         case static_cast<int>(HashEnum::SHA256): {
-            std::string sha = sha::sha256_digestHex((std::istream &) *ifs);
+            std::string sha = nullptr == key ? sha::sha256_digestHex((std::istream &) *ifs) : sha::sha256_hmacHex(
+                    (std::istream &) *ifs, *key);
             m->getHashDataModel()->setHashData(HashEnum::SHA256, sha);
         }
             break;
         case static_cast<int>(HashEnum::SHA384): {
-            std::string sha = sha::sha384_digestHex((std::istream &) *ifs);
+            std::string sha = nullptr == key ? sha::sha384_digestHex((std::istream &) *ifs) : sha::sha384_hmacHex(
+                    (std::istream &) *ifs, *key);
             m->getHashDataModel()->setHashData(HashEnum::SHA384, sha);
         }
             break;
         case static_cast<int>(HashEnum::SHA512): {
-            std::string sha = sha::sha512_digestHex((std::istream &) *ifs);
+            std::string sha = nullptr == key ? sha::sha512_digestHex((std::istream &) *ifs) : sha::sha512_hmacHex(
+                    (std::istream &) *ifs, *key);
             m->getHashDataModel()->setHashData(HashEnum::SHA512, sha);
         }
             break;
@@ -266,7 +281,7 @@ void MainViewPresenter::doBase64Calc1(const std::istringstream *iss) {
     QString data = QString::fromStdString(iss->str());
 
     std::string base64;
-    if (m->getBase64Model()->isEncrypt()){
+    if (m->getBase64Model()->isEncrypt()) {
         base64 = data.toLocal8Bit().toBase64().toStdString();
     } else {
         base64 = QByteArray::fromBase64(data.toLocal8Bit());
