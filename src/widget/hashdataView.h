@@ -28,6 +28,8 @@ public:
 
     void clearData();
 
+    void setHmacHashList(bool hmac);
+
 private:
     QGridLayout *mainLayout;
 

@@ -54,6 +54,8 @@ private:
     void currentTabChanged(int index);
 
     void dataTypeChanged();
+
+    void hmacStateChanged(int state);
 };
 
 #endif // WINDOW_H

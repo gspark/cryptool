@@ -51,6 +51,8 @@ InputDataView::InputDataView(QWidget *parent) :
 
     connect(fileName, &QLineEdit::textChanged, this, &InputDataView::dataChanged);
     connect(dataLineEdit, &QPlainTextEdit::textChanged, this, &InputDataView::dataChanged);
+    connect(hmacCheckBox, &QCheckBox::stateChanged, this, &InputDataView::hmacStateChanged);
+
 
     this->setMaximumHeight(dataTypeCbBox->heightMM() * 10 + dataLineEdit->heightMM());
 }

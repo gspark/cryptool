@@ -48,6 +48,8 @@ Q_SIGNALS:
 
     void dataChanged();
 
+    void hmacStateChanged(int);
+
 private slots:
 
     void browse();

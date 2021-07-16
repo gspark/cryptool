@@ -58,6 +58,7 @@ void MainViewPresenter::hashCalc(MainView *view, std::istream *data_ptr) {
     connect(view, &MainView::signalRunOver, &loop, &QEventLoop::quit);
 
     std::vector<int> hashList = view->getHashDataView()->getHashList();
+    LOG_INFO << "hashList count " << hashList.size();
 
     std::string *hmacKey = view->getInputDataView()->getHmacKey();
 

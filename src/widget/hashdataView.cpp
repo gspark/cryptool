@@ -49,7 +49,7 @@ std::vector<int> HashDataView::getHashList() {
 
     for (int i = 0; i < mainLayout->rowCount(); ++i) {
         auto *cb = dynamic_cast<QCheckBox *>(mainLayout->itemAtPosition(i, 0)->widget());
-        if (cb->isChecked()) {
+        if (cb->isChecked() && cb->isVisible()) {
             ret.push_back(i);
         }
     }
@@ -96,5 +96,19 @@ void HashDataView::clearData() {
             continue;
         }
         qLineEdit->clear();
+    }
+}
+
+void HashDataView::setHmacHashList(bool hmac) {
+    if (hmac) {
+        for (int i = HashLength - 1; i < HashLength; ++i) {
+            mainLayout->itemAtPosition(i,0)->widget()->hide();
+            mainLayout->itemAtPosition(i,1)->widget()->hide();
+        }
+    } else {
+        for (int i = HashLength - 1; i < HashLength; ++i) {
+            mainLayout->itemAtPosition(i,0)->widget()->show();
+            mainLayout->itemAtPosition(i,1)->widget()->show();
+        }
     }
 }

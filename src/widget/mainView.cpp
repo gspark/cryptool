@@ -68,6 +68,7 @@ MainView::MainView(QWidget *parent)
     connect(inputDataView, &InputDataView::dataTypeChanged, base64View, &Base64View::clearData);
 
     connect(inputDataView, &InputDataView::dataTypeChanged, this, &MainView::dataTypeChanged);
+    connect(inputDataView, &InputDataView::hmacStateChanged, this, &MainView::hmacStateChanged);
 
     this->resize(ConfigIni::getInstance().iniRead(QStringLiteral("MainView/size"), this->sizeHint()).toSize());
 }
@@ -144,3 +145,13 @@ void MainView::currentTabChanged(int index) {
 void MainView::dataTypeChanged() {
     this->base64View->setEncrypt(this->inputDataView->dateTypeIsFile());
 }
+
+void MainView::hmacStateChanged(int state) {
+    if (state == Qt::CheckState::Checked) {
+        this->hashDataView->setHmacHashList(true);
+    } else {
+        this->hashDataView->setHmacHashList(false);
+    }
+}
+
+
