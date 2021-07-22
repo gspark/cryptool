@@ -11,6 +11,8 @@ class str {
 
 public:
     static std::string HexToString(const unsigned char *data, size_t size, bool uppercase = false);
+
+    static std::string LongToHex(unsigned long entier);
 };
 
 

@@ -17,10 +17,11 @@ enum class HashEnum {
     SHA256,
     SHA384,
     SHA512,
-    SM3
+    SM3,
+    CRC32
 };
 
-static const char *HashEnumStrings[] = {"MD5", "MD4", "SHA1", "SHA256", "SHA384", "SHA512", "SM3"};
+static const char *HashEnumStrings[] = {"MD5", "MD4", "SHA1", "SHA256", "SHA384", "SHA512", "SM3", "CRC32"};
 
 static const unsigned int HashLength = sizeof(HashEnumStrings) / sizeof(HashEnumStrings[0]);
 
@@ -29,6 +30,7 @@ public:
     std::map<int, std::string> hashDataMap;
 public:
     void setHashData(HashEnum hashEnum, std::string &data);
+
     void clear();
 };
 

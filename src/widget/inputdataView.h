@@ -42,6 +42,8 @@ public:
     std::string *getHmacKey();
 
 public :
+    void hmacEnabled(bool);
+
 Q_SIGNALS:
 
     void dataTypeChanged();
@@ -55,6 +57,8 @@ private slots:
     void browse();
 
     void setDateType(int index);
+
+    void hmacStateChang(int);
 
 private:
     QGridLayout *mainLayout;
@@ -72,6 +76,8 @@ private:
     QLineEdit *hmacKey;
 
     void initDateType(int currentIdx);
+
+    void initHmacCheckBox(int);
 };
 
 

@@ -55,7 +55,7 @@ add_executable(${PROJECT_NAME}
 #        src/crypto/digest/base64.cpp
 #        src/crypto/digest/base64.h
         src/widget/base64Model.cpp
-        src/widget/base64Model.h)
+        src/widget/base64Model.h src/crypto/digest/crc32.cpp src/crypto/digest/crc32.h)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
         WIN32_EXECUTABLE TRUE

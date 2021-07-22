@@ -52,6 +52,7 @@ MainView::MainView(QWidget *parent)
     tabWidget->addTab(base64View, tr(calculateEnumStrings[static_cast<int>(CalculateEnum::base64)]));
     connect(tabWidget, &QTabWidget::currentChanged,this, &MainView::currentTabChanged);
 
+
     mainLayout->addWidget(tabWidget);
     mainLayout->addStretch();
     mainLayout->addWidget(line);
@@ -136,9 +137,11 @@ void MainView::currentTabChanged(int index) {
     }
     if (index == 0) {
         mainViewModel->setHashDataModel(dynamic_cast<HashDataModel *>(this->hashDataView->getModel()));
+        inputDataView->hmacEnabled(true);
     } else if (index == 1) {
         mainViewModel->setBase64Model(dynamic_cast<Base64Model *>(this->base64View->getModel()));
         this->base64View->setEncrypt(this->inputDataView->dateTypeIsFile());
+        inputDataView->hmacEnabled(false);
     }
 }
 

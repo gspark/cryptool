@@ -11,6 +11,7 @@
 #include "../crypto/digest/md4_5.h"
 #include "../crypto/digest/sha.h"
 #include "../crypto/digest/sm3.h"
+#include "../crypto/digest/crc32.h"
 
 #include <thread>
 #include <QEventLoop>
@@ -172,6 +173,11 @@ void MainViewPresenter::doCalc1(const std::istringstream *iss, int iEnum, const 
             m->getHashDataModel()->setHashData(HashEnum::SM3, sm3);
         }
             break;
+        case static_cast<int>(HashEnum::CRC32): {
+            std::string crc = Crc32::crc32(iss->str());
+            m->getHashDataModel()->setHashData(HashEnum::CRC32, crc);
+        }
+            break;
         default:
             break;
     }
@@ -230,6 +236,12 @@ void MainViewPresenter::doCalc2(const std::ifstream *ifs, int iEnum, const std::
             std::string sm3 = SM3::sm3_digestHex((std::istream &) *ifs);
             m->getHashDataModel()->setHashData(HashEnum::SM3, sm3);
         }
+            break;
+        case static_cast<int>(HashEnum::CRC32): {
+            std::string crc = Crc32::crc32((std::istream &) *ifs);
+            m->getHashDataModel()->setHashData(HashEnum::CRC32, crc);
+        }
+            break;
         default:
             break;
     }

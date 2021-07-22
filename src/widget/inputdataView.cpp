@@ -44,21 +44,19 @@ InputDataView::InputDataView(QWidget *parent) :
 
     // HMAC
     mainLayout->addWidget(new QLabel(tr("Key:")), 2, 1, 1, 2);
-    hmacCheckBox = new QCheckBox(tr("HMAC"));
-    mainLayout->addWidget(hmacCheckBox, 3, 0);
-    hmacKey = new QLineEdit(this);
-    mainLayout->addWidget(hmacKey, 3, 1, 1, 2);
+    int hmacCheck = ConfigIni::getInstance().iniRead(QStringLiteral("Hash/hmacState"), 0).toInt();
+    initHmacCheckBox(hmacCheck);
 
     connect(fileName, &QLineEdit::textChanged, this, &InputDataView::dataChanged);
     connect(dataLineEdit, &QPlainTextEdit::textChanged, this, &InputDataView::dataChanged);
-    connect(hmacCheckBox, &QCheckBox::stateChanged, this, &InputDataView::hmacStateChanged);
-
+    connect(hmacKey, &QLineEdit::textChanged, this, &InputDataView::dataChanged);
 
     this->setMaximumHeight(dataTypeCbBox->heightMM() * 10 + dataLineEdit->heightMM());
 }
 
 InputDataView::~InputDataView() {
     ConfigIni::getInstance().iniWrite(QStringLiteral("Hash/dataType"), dataTypeCbBox->currentIndex());
+    ConfigIni::getInstance().iniWrite(QStringLiteral("Hash/hmacState"), hmacCheckBox->checkState());
 }
 
 void InputDataView::browse() {
@@ -139,4 +137,39 @@ std::string *InputDataView::getHmacKey() {
         return nullptr;
     }
     return new std::string(hmacKey->text().toStdString());;
+}
+
+void InputDataView::hmacStateChang(int state) {
+    if (state == Qt::CheckState::Checked) {
+        this->hmacKey->setEnabled(true);
+    } else {
+        this->hmacKey->setEnabled(false);
+    }
+}
+
+void InputDataView::initHmacCheckBox(int state) {
+    hmacCheckBox = new QCheckBox(tr("HMAC"));
+    if (state == Qt::CheckState::Checked) {
+        hmacCheckBox->setCheckState(Qt::CheckState::Checked);
+    } else {
+        hmacCheckBox->setCheckState(Qt::CheckState::Unchecked);
+    }
+
+    mainLayout->addWidget(hmacCheckBox, 3, 0);
+    hmacKey = new QLineEdit(this);
+    mainLayout->addWidget(hmacKey, 3, 1, 1, 2);
+    hmacStateChang(state);
+
+    connect(hmacCheckBox, &QCheckBox::stateChanged, this, &InputDataView::hmacStateChanged);
+    connect(hmacCheckBox, &QCheckBox::stateChanged, this, &InputDataView::hmacStateChang);
+}
+
+void InputDataView::hmacEnabled(bool enabled) {
+    hmacCheckBox->setEnabled(enabled);
+    if (!enabled) {
+        this->hmacKey->clear();
+        hmacStateChang(0);
+    } else {
+        hmacStateChang(2);
+    }
 }

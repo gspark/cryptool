@@ -101,12 +101,12 @@ void HashDataView::clearData() {
 
 void HashDataView::setHmacHashList(bool hmac) {
     if (hmac) {
-        for (int i = HashLength - 1; i < HashLength; ++i) {
+        for (int i = HashLength - 2; i < HashLength; ++i) {
             mainLayout->itemAtPosition(i,0)->widget()->hide();
             mainLayout->itemAtPosition(i,1)->widget()->hide();
         }
     } else {
-        for (int i = HashLength - 1; i < HashLength; ++i) {
+        for (int i = HashLength - 2; i < HashLength; ++i) {
             mainLayout->itemAtPosition(i,0)->widget()->show();
             mainLayout->itemAtPosition(i,1)->widget()->show();
         }

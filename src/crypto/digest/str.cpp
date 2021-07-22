@@ -4,6 +4,7 @@
 
 #include "str.h"
 #include <sstream>
+#include <cstring>
 
 std::string str::HexToString(const unsigned char *data, size_t size, bool uppercase) {
     static const char lower_hex[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
@@ -17,4 +18,11 @@ std::string str::HexToString(const unsigned char *data, size_t size, bool upperc
     for (size_t i = 0; i < size; ++i)
         ss << hex[(data[i] >> 4)] << hex[(data[i] & 0x0F)];
     return ss.str();
+}
+
+std::string str::LongToHex(unsigned long entier) {
+    char str[50];
+    memset(str, 0, sizeof(str));
+    sprintf(str, "%x", entier);
+    return str;
 }
